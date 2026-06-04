@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"/>
-<meta name="fade-build" content="2026-06-03-1609"/>
+<meta name="fade-build" content="2026-06-04-0005"/>
 <title>FADE — how much can you hold?</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -48,7 +48,9 @@
 
   .btn{appearance:none; border:1px solid var(--line2); background:var(--surface); color:var(--text);
     font-family:var(--disp); font-weight:700; font-size:15px; padding:15px 18px; border-radius:13px; width:100%;
+    display:flex; align-items:center; justify-content:center; gap:8px;
     cursor:pointer; transition:transform .08s, filter .15s}
+  .btn svg{width:18px; height:18px; flex:none}
   .btn:active{transform:scale(.985)}
   .btn-primary{border:none; background:var(--text); color:var(--bg);
     font-weight:800; font-size:18px; box-shadow:0 12px 34px rgba(0,0,0,.5)}
@@ -198,7 +200,7 @@
       <button class="btn btn-primary" id="startBtn">START TODAY’S FADE</button>
       <button class="btn btn-ghost" id="replayBtn" style="display:none">Play again</button>
       <div class="footnote" id="introFoot"></div>
-      <div class="buildStamp">build 2026-06-03-1609</div>
+      <div class="buildStamp">build 2026-06-04-0005</div>
     </div>
   </section>
 
@@ -226,9 +228,9 @@
       <div class="tIco" id="tIco">🧊</div>
       <div class="tName" id="tName">Spatial</div>
       <div class="tHow" id="tHow"></div>
-      <div class="tally">clarity so far<b id="tTally">—</b></div>
+      <div class="tally">score so far<b id="tTally">—</b></div>
     </div>
-    <button class="btn btn-primary" id="contBtn">Continue ▸</button>
+    <button class="btn btn-primary" id="contBtn">Continue <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
   </section>
 
   <!-- SUMMARY -->
@@ -237,8 +239,8 @@
     <div id="sumActions">
       <div id="sumStats"></div>
       <div class="shareRow">
-        <button class="btn btn-primary" id="shareBtn">Share ▸</button>
-        <button class="btn" id="downloadCardBtn">↓ Save</button>
+        <button class="btn btn-primary" id="shareBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>Share</button>
+        <button class="btn" id="downloadCardBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Save</button>
       </div>
       <div id="bonusSlot"></div>
       <button class="btn btn-ghost" id="doneBtn">Done</button>
@@ -1883,8 +1885,8 @@ document.addEventListener('keydown',e=>{ if(!G||!G.cardEl)return;
   .dot{width:9px; height:9px; border-radius:999px; background:var(--surface2)}
   .dot.done{background:var(--crisp)} .dot.cur{box-shadow:0 0 0 2px var(--crisp)}
   .clock{margin-left:auto; font-size:13px; font-weight:700; color:var(--muted); font-variant-numeric:tabular-nums}
-  .stage{flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; gap:18px; min-height:0}
-  .clues{display:flex; flex-direction:column; gap:10px}
+  .stage{flex:1; display:flex; flex-direction:column; justify-content:space-evenly; align-items:center; gap:14px; min-height:0}
+  .clues{display:flex; flex-direction:column; gap:clamp(14px,4vh,30px)}
   .em{display:inline-flex; align-items:center; justify-content:center; width:1.5em; height:1.5em; border-radius:10px; background:var(--card2); border:1px solid var(--line); flex:none}
   .em .g{display:inline-block; line-height:1; will-change:opacity,filter; transition:opacity .2s ease, filter .2s ease}
   .eqn{display:flex; align-items:center; justify-content:center; gap:10px; font-size:28px; line-height:1.1; padding:4px}
@@ -1918,7 +1920,7 @@ document.addEventListener('keydown',e=>{ if(!G||!G.cardEl)return;
   .gameHud .stat .k{font-family:var(--mono,ui-monospace,Menlo,monospace);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted2);line-height:1}
   .gameHud .stat .v{font-family:var(--mono,ui-monospace,Menlo,monospace);font-size:18px;font-weight:700;line-height:1.05;font-variant-numeric:tabular-nums}
   .gameHud .stat .v.accent{color:var(--crisp)}
-  @media (max-height:760px){ .opt{padding:15px 0; font-size:22px} .eqn{font-size:28px} .qrow{padding:12px 4px} .opts{gap:9px} .stage{gap:12px} }
+  @media (max-height:760px){ .opt{padding:15px 0; font-size:22px} .eqn{font-size:28px} .qrow{padding:12px 4px} .opts{gap:9px} .stage{gap:10px} .clues{gap:10px} }
 
   /* summary */
   #summary{justify-content:center; align-items:center; text-align:center; gap:0}
@@ -2033,7 +2035,8 @@ function genRound(rng, tier){
   const U=tier.unknowns;
   const pool=shuffle([...EMOJI],rng); const em=pool.slice(0,U);
   const span=tier.hi-tier.lo+1;
-  const a=tier.lo+Math.floor(rng()*span), b=tier.lo+Math.floor(rng()*span), c=tier.lo+Math.floor(rng()*span);
+  // pairwise-distinct values so two different emojis never resolve to the same number
+  const [a,b,c]=shuffle(Array.from({length:span},(_,k)=>tier.lo+k), rng).slice(0,3);
   // clue chain is uniquely solvable: e0+e0 → a, e0+e1 → b, (e1+e2 → c for 3 unknowns)
   const clues = U===2
     ? [ {i:0,j:0,sum:a+a}, {i:0,j:1,sum:a+b} ]
@@ -2154,10 +2157,10 @@ const $=s=>document.querySelector(s);
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 
 const DOMAINS=[
-  {key:'memory', name:'Memory', icon:'🧠', verb:'remember', hex:'#3eb597', desc:'working memory',  src:'g-memory',  badge:'',     cap:80,  how:'Tap two cards to find a pair. They fade as you play — match fast, and clear the board before it’s gone.'},
-  {key:'spatial',name:'Spatial',icon:'🧊', verb:'rotate',   hex:'#4fb0e4', desc:'mental rotation', src:'g-spatial', badge:'',     cap:60,  how:'A flat cube flashes, then fades. Pick the 3D shape it folds into — from memory.'},
-  {key:'logic',  name:'Logic',  icon:'⚖️', verb:'solve',    hex:'#a87fd4', desc:'numeric reasoning',src:'g-logic',   badge:'',     cap:100, how:'Every emoji hides a number. Crack the clues before they fade, then pick the answer.'},
-  {key:'speed',  name:'Speed',  icon:'⚡', verb:'sort',     hex:'#7e8ce8', desc:'processing speed', src:'g-speed',   badge:'BONUS', cap:55, bonus:true,  how:'Swipe right if the card fits the rule, left if not. It speeds up — one wrong call ends the run.'},
+  {key:'memory', name:'Memory', icon:'🧠', verb:'remember', hex:'#3eb597', desc:'Match the pairs',  src:'g-memory',  badge:'',     cap:80,  how:'Tap two cards to find a pair. They fade as you play — match fast, and clear the board before it’s gone.'},
+  {key:'spatial',name:'Spatial',icon:'🧊', verb:'rotate',   hex:'#4fb0e4', desc:'Rotate the shape', src:'g-spatial', badge:'',     cap:60,  how:'A flat cube flashes, then fades. Pick the 3D shape it folds into — from memory.'},
+  {key:'logic',  name:'Logic',  icon:'⚖️', verb:'solve',    hex:'#a87fd4', desc:'Crack the code',src:'g-logic',   badge:'',     cap:100, how:'Every emoji hides a number. Crack the clues before they fade, then pick the answer.'},
+  {key:'speed',  name:'Speed',  icon:'⚡', verb:'sort',     hex:'#7e8ce8', desc:'Fast decisions', src:'g-speed',   badge:'BONUS', cap:55, bonus:true,  how:'Swipe right if the card fits the rule, left if not. It speeds up — one wrong call ends the run.'},
 ];
 
 /* ---- daily number (LOCAL midnight) ---- */
@@ -2232,8 +2235,8 @@ function renderIntro(){
   [0,1,2].forEach(i=>{ const sp=letters[i]; if(sp) sp.classList.toggle('done', !!S.results[i]); });
   if(letters[3]) letters[3].classList.toggle('done', !!S.bonus);   // E tile lights when the bonus is played
   const btn=$('#startBtn'), foot=$('#introFoot'), rb=$('#replayBtn');
-  if(S.done){ const ds=dayStreak(); btn.textContent='View today’s clarity ▸'; rb.style.display=''; foot.innerHTML=`FADE <b>#${S.dn}</b> complete${ds>0?` · 🔥 <b>day ${ds}</b>`:''} · back tomorrow`; }
-  else if(S.idx>0){ rb.style.display='none'; btn.textContent=`Resume · Leg ${S.idx+1} of ${CORE_N}`; foot.innerHTML=`FADE <b>#${S.dn}</b> · ${S.idx} of ${CORE_N} done`; }
+  if(S.done){ const ds=dayStreak(); btn.innerHTML='See today’s result <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>'; rb.style.display=''; foot.innerHTML=`FADE <b>#${S.dn}</b> complete${ds>0?` · 🔥 <b>day ${ds}</b>`:''} · back tomorrow`; }
+  else if(S.idx>0){ rb.style.display='none'; btn.textContent=`Resume · Game ${S.idx+1} of ${CORE_N}`; foot.innerHTML=`FADE <b>#${S.dn}</b> · ${S.idx} of ${CORE_N} done`; }
   else { rb.style.display='none'; btn.textContent='START TODAY’S FADE'; foot.innerHTML=`FADE <b>#${S.dn}</b> · one run per day`; }
   show('intro');
 }
@@ -2389,7 +2392,7 @@ function showTransition(idx, bonus){
   document.documentElement.style.setProperty('--crisp', d.hex);
   document.documentElement.style.setProperty('--glow', glowOf(d.hex));
   progressMap($('#transMap'), bonus?CORE_N:idx);
-  $('#tLeg').textContent = bonus ? 'Bonus round' : `Leg ${idx+1} of ${CORE_N}`;
+  $('#tLeg').textContent = bonus ? 'Bonus round' : `Game ${idx+1} of ${CORE_N}`;
   const ico=$('#tIco'); ico.textContent=d.icon; ico.style.background=d.hex+'22';
   const nm=$('#tName'); nm.textContent=d.name; nm.style.color=d.hex;
   // instructions are always shown up front (the rarely-seen bonus included)
@@ -2397,7 +2400,7 @@ function showTransition(idx, bonus){
   $('#tHow').style.display='block';
   const tw=document.querySelector('#transition .tally'); if(tw) tw.style.display = (bonus||idx===0) ? 'none' : 'block';
   $('#tTally').textContent=brainSoFar()??'—';
-  $('#contBtn').textContent = bonus ? 'Start bonus ▸' : 'Continue ▸';
+  $('#contBtn').innerHTML = (bonus ? 'Start bonus' : 'Continue') + ' <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>';
   $('#contBtn').style.background=`linear-gradient(180deg,${d.hex},${shade(d.hex,-18)})`;
   show('transition');
 }
@@ -2420,11 +2423,11 @@ function showSummary(){
 function renderBonusSlot(){
   const slot=$('#bonusSlot'); slot.innerHTML='';
   if(S.bonus){
-    const ch=document.createElement('button'); ch.className='btn btn-bonus'; ch.id='challengeBtn'; ch.textContent='Challenge a friend ▸';
+    const ch=document.createElement('button'); ch.className='btn btn-bonus'; ch.id='challengeBtn'; ch.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>Challenge a friend';
     ch.onclick=challengeShare; slot.appendChild(ch);
   } else {
     const b=document.createElement('button'); b.className='btn btn-bonus'; b.id='bonusBtn';
-    b.textContent='⚡ Bonus — how long can you last?';
+    b.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>Bonus — how long can you last?';
     b.onclick=()=>showTransition(3,true);
     slot.appendChild(b);
   }
@@ -2460,10 +2463,10 @@ async function nativeOrCopy(payload, btn, restore){
     if(payload.file && navigator.canShare && navigator.canShare({files:[payload.file]})){ await navigator.share({files:[payload.file], text:payload.text}); return; }
     if(navigator.share){ await navigator.share({text:payload.text}); return; }
   }catch(e){ if(e && e.name==='AbortError') return; }   // user dismissed the sheet — don't fall through
-  try{ await navigator.clipboard.writeText(payload.text); if(btn){ btn.textContent='Copied ✓'; setTimeout(()=>btn.textContent=restore,1700); } }
-  catch(e){ if(btn){ btn.textContent='Copy unavailable here'; setTimeout(()=>btn.textContent=restore,1700); } }
+  try{ await navigator.clipboard.writeText(payload.text); if(btn){ const o=btn.innerHTML; btn.textContent='Copied ✓'; setTimeout(()=>btn.innerHTML=o,1700); } }
+  catch(e){ if(btn){ const o=btn.innerHTML; btn.textContent='Copy unavailable here'; setTimeout(()=>btn.innerHTML=o,1700); } }
 }
-function challengeShare(){ nativeOrCopy({text:challengeText()}, $('#challengeBtn'), 'Challenge a friend ▸'); }
+function challengeShare(){ nativeOrCopy({text:challengeText()}, $('#challengeBtn'), 'Challenge a friend'); }
 $('#downloadCardBtn').onclick=()=>{
   if(!shareCanvas) return;
   // direct download survives in-app webviews (X/IG/Threads) where navigator.share blobs often fail
@@ -2474,7 +2477,7 @@ $('#downloadCardBtn').onclick=()=>{
 };
 $('#shareBtn').onclick=async()=>{ const b=$('#shareBtn'); const txt=shareText(brainFinal()); let file=null;
   try{ if(shareCanvas){ const blob=await new Promise(r=>shareCanvas.toBlob(r,'image/png')); file=new File([blob],`fade-${S.dn}.png`,{type:'image/png'}); } }catch(e){}
-  nativeOrCopy({text:txt, file}, b, 'Share ▸'); };
+  nativeOrCopy({text:txt, file}, b, 'Share'); };
 
 let shareCanvas=null;
 async function renderShareImage(brain){
@@ -2538,7 +2541,7 @@ function shade(hex,amt){ const n=parseInt(hex.slice(1),16); let r=clamp((n>>16)+
 function glowOf(hex){ const n=parseInt(hex.slice(1),16); return `rgba(${(n>>16)&255},${(n>>8)&255},${n&255},.32)`; }
 
 /* ---------------- boot ---------------- */
-console.log('FADE · build 2026-06-03-1609');
+console.log('FADE · build 2026-06-04-0005');
 $('#startBtn').onclick=()=>{
   ac();
   if(S.done){ showSummary(); return; }
