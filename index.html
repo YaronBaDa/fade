@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"/>
-<meta name="fade-build" content="2026-06-04-0112"/>
+<meta name="fade-build" content="2026-06-04-0354"/>
 <title>FADE — how much can you hold?</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -54,7 +54,7 @@
   .btn:active{transform:scale(.985)}
   .btn-primary{border:none; background:var(--text); color:var(--bg);
     font-weight:800; font-size:18px; box-shadow:0 12px 34px rgba(0,0,0,.5)}
-  #startBtn, #shareBtn{background:var(--aurora)}
+  #startBtn{background:var(--aurora)}
   .btn-ghost{background:transparent; border-color:var(--line); color:var(--muted); font-weight:600; font-size:15px}
 
   /* INTRO */
@@ -167,7 +167,7 @@
   .devReset{margin-top:14px; font-size:11px; color:var(--muted2); text-decoration:underline; cursor:pointer; background:none; border:none}
   #bonusSlot{width:100%; display:flex; flex-direction:column; gap:8px; align-items:center}
   .btn-bonus{max-width:330px; background:var(--surface); border:1px solid var(--line2); color:var(--text); font-weight:700}
-  #bonusBtn{background:var(--text); color:var(--bg); border:none; font-weight:800; box-shadow:0 10px 28px rgba(0,0,0,.45)}
+  #bonusBtn{background:var(--aurora); color:var(--bg); border:none; font-weight:800; box-shadow:0 10px 28px rgba(0,0,0,.45)}
 
   /* P1: short-viewport containment — keep every screen on a single layer, no scroll */
   @media (max-height:850px){
@@ -201,7 +201,7 @@
       <button class="btn btn-primary" id="startBtn">START TODAY’S FADE</button>
       <button class="btn btn-ghost" id="replayBtn" style="display:none">Play again</button>
       <div class="footnote" id="introFoot"></div>
-      <div class="buildStamp">build 2026-06-04-0112</div>
+      <div class="buildStamp">build 2026-06-04-0354</div>
     </div>
   </section>
 
@@ -2550,7 +2550,7 @@ function shade(hex,amt){ const n=parseInt(hex.slice(1),16); let r=clamp((n>>16)+
 function glowOf(hex){ const n=parseInt(hex.slice(1),16); return `rgba(${(n>>16)&255},${(n>>8)&255},${n&255},.32)`; }
 
 /* ---------------- boot ---------------- */
-console.log('FADE · build 2026-06-04-0112');
+console.log('FADE · build 2026-06-04-0354');
 $('#startBtn').onclick=()=>{
   ac();
   if(S.done){ showSummary(); return; }
