@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"/>
-<meta name="fade-build" content="2026-06-04-0354"/>
+<meta name="fade-build" content="2026-06-04-0357"/>
 <title>FADE — how much can you hold?</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -201,7 +201,7 @@
       <button class="btn btn-primary" id="startBtn">START TODAY’S FADE</button>
       <button class="btn btn-ghost" id="replayBtn" style="display:none">Play again</button>
       <div class="footnote" id="introFoot"></div>
-      <div class="buildStamp">build 2026-06-04-0354</div>
+      <div class="buildStamp">build 2026-06-04-0357</div>
     </div>
   </section>
 
@@ -1896,7 +1896,7 @@ document.addEventListener('keydown',e=>{ if(!G||!G.cardEl)return;
   .qrow{display:flex; align-items:center; justify-content:center; gap:10px; font-size:34px; line-height:1.1;
     padding:16px 4px; margin:0; border-top:1px solid var(--line); border-bottom:1px solid var(--line)}
   .qrow .op{color:var(--muted); font-weight:700; font-size:28px; font-family:var(--disp)}
-  .qrow .qm{font-family:var(--logo); color:var(--crisp); font-size:34px}
+  .qrow .qm{font-family:var(--disp); font-weight:800; color:var(--crisp); font-size:34px}
   .qm.typed{color:var(--crisp)} .qm.ok{color:var(--good)} .qm.no{color:var(--bad)}
   .opts{display:grid; grid-template-columns:repeat(2,1fr); gap:10px; width:100%; margin-top:auto; padding-top:14px}
   .opt{font-family:var(--disp); font-weight:800; font-size:28px; padding:20px 0; border-radius:16px; background:var(--card2);
@@ -2550,7 +2550,7 @@ function shade(hex,amt){ const n=parseInt(hex.slice(1),16); let r=clamp((n>>16)+
 function glowOf(hex){ const n=parseInt(hex.slice(1),16); return `rgba(${(n>>16)&255},${(n>>8)&255},${n&255},.32)`; }
 
 /* ---------------- boot ---------------- */
-console.log('FADE · build 2026-06-04-0354');
+console.log('FADE · build 2026-06-04-0357');
 $('#startBtn').onclick=()=>{
   ac();
   if(S.done){ showSummary(); return; }
