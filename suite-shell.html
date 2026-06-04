@@ -1,0 +1,665 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"/>
+<meta name="fade-build" content="__BUILD__"/>
+<title>FADE — how much can you hold?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0b0a0d; --bg2:#141218; --card:#211d28; --card2:#191620;
+    --line:rgba(255,255,255,.08); --line2:rgba(255,255,255,.16);
+    --text:#f4f1ea; --muted:#8d8896; --muted2:#807c8a;
+    --crisp:#f4f1ea; --crisp-soft:#d8d4cc; --ghost:#6b7da6;
+    --good:#6fa88f; --warn:#ffd166; --bad:#ff5f6d; --ice:#9ad8ff;
+    --glow:rgba(255,255,255,.16);
+    --surface:rgba(255,255,255,.028); --surface2:rgba(255,255,255,.10);
+    --on-accent:#0b0a0d;
+    --disp:'Plus Jakarta Sans',system-ui,sans-serif;
+    --logo:'Syne',system-ui,sans-serif; --mono:'Plus Jakarta Sans',system-ui,sans-serif;
+    --d-memory:#3eb597; --d-spatial:#4fb0e4; --d-logic:#a87fd4; --d-speed:#7e8ce8;
+    --aurora:linear-gradient(90deg,#3eb597,#4fb0e4,#7e8ce8,#a87fd4);
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0;overscroll-behavior:none}
+  body{
+    background:
+      radial-gradient(900px 500px at 80% -15%, rgba(62,181,151,.07), transparent 55%),
+      radial-gradient(800px 600px at -10% 110%, rgba(126,140,232,.06), transparent 55%),
+      var(--bg);
+    color:var(--text); font-family:var(--disp); -webkit-font-smoothing:antialiased;
+    position:fixed; inset:0; width:100%; height:100vh; height:100dvh; overflow:hidden; overscroll-behavior:none; touch-action:manipulation; user-select:none;
+  }
+  #app{position:relative; height:100vh; height:100dvh; max-width:560px; margin:0 auto; overflow:hidden}
+  .screen{position:absolute; inset:0; display:none; flex-direction:column; padding:max(30px,env(safe-area-inset-top)) 24px max(34px,env(safe-area-inset-bottom))}
+  .screen.on{display:flex}
+
+  .mark{display:flex; gap:9px; justify-content:center}
+  .mark span{font-family:var(--logo); font-weight:800; letter-spacing:.01em; width:54px; height:70px; display:grid; place-items:center;
+    background:var(--card); border:1px solid var(--line); border-radius:13px; font-size:28px; color:var(--text);
+    box-shadow:0 8px 20px rgba(0,0,0,.35); animation:letterFade 5.5s ease-in-out infinite; will-change:opacity,filter}
+  .mark span:nth-child(1){animation-delay:0s} .mark span:nth-child(2){animation-delay:1.35s} .mark span:nth-child(3){animation-delay:2.7s} .mark span:nth-child(4){animation-delay:4.05s}
+  .mark span.done{animation:none; opacity:1; filter:none}
+  @keyframes letterFade{0%,100%{opacity:1; filter:none} 50%{opacity:.4; filter:blur(1.4px) grayscale(.55)}}
+  @media (prefers-reduced-motion:reduce){ .mark span{animation:none} }
+
+  .btn{appearance:none; border:1px solid var(--line2); background:var(--surface); color:var(--text);
+    font-family:var(--disp); font-weight:700; font-size:15px; padding:15px 18px; border-radius:13px; width:100%;
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    cursor:pointer; transition:transform .08s, filter .15s}
+  .btn svg{width:18px; height:18px; flex:none}
+  .btn:active{transform:scale(.985)}
+  .btn-primary{border:none; background:var(--text); color:var(--bg);
+    font-weight:800; font-size:18px; box-shadow:0 12px 34px rgba(0,0,0,.5)}
+  #startBtn, #shareBtn{background:var(--aurora)}
+  .btn-ghost{background:transparent; border-color:var(--line); color:var(--muted); font-weight:600; font-size:15px}
+
+  /* INTRO */
+  #intro{justify-content:space-between}
+  .introTop{display:flex; flex-direction:column; align-items:center}
+  .eyebrow{font-size:11px; letter-spacing:.22em; text-transform:uppercase; color:var(--muted)}
+  #intro .mark{margin:18px 0 12px}
+  .subtitle{font-size:15px; color:var(--muted); text-align:center; line-height:1.5}
+  .subtitle b{color:var(--text); font-weight:700}
+  .domainRow{display:flex; flex-direction:column; gap:10px; width:100%; max-width:340px; margin:0 auto}
+  .dpill{display:flex; align-items:center; gap:13px; padding:13px 15px; border-radius:14px; background:var(--surface); border:1px solid var(--line)}
+  .dpill .ico{width:38px; height:38px; border-radius:10px; display:grid; place-items:center; font-size:22px; flex:none}
+  .dpill .meta{display:flex; flex-direction:column; line-height:1.25}
+  .dpill .nm{font-weight:700; font-size:15px}
+  .dpill .dm{font-size:11px; color:var(--muted)}
+  .dpill .num{margin-left:auto; display:flex; align-items:center}
+  .dpill .pill{padding:4px 12px; border-radius:999px; font-weight:800; font-size:13px; letter-spacing:.02em; font-variant-numeric:tabular-nums}
+  .dpill .pill.bonus{background:rgba(126,140,232,.16); color:#aab3f1; font-size:11px; letter-spacing:.14em; padding:4px 10px}
+  .introBottom{display:flex; flex-direction:column; gap:12px; width:100%; max-width:360px; margin:0 auto}
+  .footnote{text-align:center; font-size:13px; color:var(--muted2); letter-spacing:.04em}
+  .footnote b{color:var(--crisp); font-weight:700}
+  .buildStamp{margin-top:10px; text-align:center; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted2); opacity:.5}
+
+  /* LEG (hosts a game iframe or the stub) */
+  #leg{padding:0}
+  .legbar{display:flex; flex-direction:column; gap:9px; padding:14px 16px 11px; border-bottom:1px solid var(--line)}
+  .legbar .row{display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:8px; min-width:0}
+  .legLeft{justify-self:start; display:flex; align-items:center; gap:8px; min-width:0}
+  .legTag{font-size:13px; font-weight:800; letter-spacing:.16em; text-transform:uppercase; flex:none}
+  .legHud{justify-self:center; text-align:center; font-family:var(--mono,ui-monospace,Menlo,monospace); font-size:13px; font-weight:700; letter-spacing:.04em; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; font-variant-numeric:tabular-nums}
+  .legHud b{color:var(--crisp)}
+  .preview{font-size:11px; font-weight:800; letter-spacing:.12em; padding:3px 7px; border-radius:999px; border:1px solid var(--line2); color:var(--muted); text-transform:uppercase}
+  .finishBtn{justify-self:end; font-size:12px; font-weight:800; color:var(--on-accent); background:var(--crisp); border:none; border-radius:999px; padding:8px 13px; cursor:pointer; white-space:nowrap}
+  .legTime{position:absolute; top:0; left:0; right:0; height:4px; background:rgba(255,255,255,.07); z-index:6}
+  .legTimeFill{height:100%; width:100%; background:var(--crisp); border-radius:0 2px 2px 0}
+  .finishBtn.ready{animation:pulse 1.4s ease infinite}
+  @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(224,106,59,.5)}70%{box-shadow:0 0 0 12px rgba(224,106,59,0)}100%{box-shadow:0 0 0 0 rgba(224,106,59,0)}}
+  #legHost{flex:1; min-height:0; overflow:hidden; position:relative}
+  .gameFrame{width:100%; height:100%; border:0; display:block; background:var(--bg)}
+
+  /* stub reaction grid */
+  .stubWrap{height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; padding:20px}
+  .rgrid{display:grid; grid-template-columns:repeat(3,1fr); gap:12px; width:100%; max-width:300px}
+  .rcell{aspect-ratio:1/1; border-radius:14px; background:var(--card2); border:1px solid var(--line); display:grid; place-items:center; cursor:pointer; transition:transform .1s}
+  .rcell.lit{transform:scale(1.04)}
+  .rcell .dot{width:60%; height:60%; border-radius:12px; opacity:0; transition:opacity .12s}
+  .rcell.lit .dot{opacity:1}
+  .scoreLine{font-size:13px; color:var(--muted); font-weight:600}
+  .scoreLine b{color:var(--text)}
+  .legHint{font-size:13px; color:var(--muted); text-align:center}
+
+  /* PROGRESS MAP */
+  .pmap{display:flex; align-items:center; justify-content:center}
+  .pnode{width:12px; height:12px; border-radius:999px; background:rgba(255,255,255,.18); flex:none; border:2px solid transparent; transition:all .35s ease}
+  .pnode.done{background:#f4f1ea; box-shadow:0 0 8px rgba(255,255,255,.18)}
+  .pnode.cur{background:var(--crisp); border-color:rgba(255,255,255,.9); width:15px; height:15px; box-shadow:0 0 14px var(--glow)}
+  .pseg{height:2px; flex:1; max-width:42px; background:rgba(255,255,255,.14); transition:background .45s ease}
+  .pseg.done{background:rgba(244,241,234,.7)}
+
+  /* TRANSITION */
+  #transition{justify-content:space-between; align-items:center; text-align:center}
+  .tTop{display:flex; flex-direction:column; align-items:center; gap:16px; width:100%; padding-top:4px}
+  .tMid{flex:1; min-height:0; display:flex; flex-direction:column; align-items:center; justify-content:center}
+  .tTop .pseg{min-width:30px; max-width:64px}
+  .tTop .pnode{width:13px; height:13px}
+  .tTop .pnode.cur{width:16px; height:16px}
+  .tLeg{font-size:13px; font-weight:800; letter-spacing:.2em; text-transform:uppercase; color:var(--muted); margin:0}
+  .tIco{width:92px; height:92px; border-radius:24px; display:grid; place-items:center; font-size:42px; margin-bottom:16px}
+  .tName{font-family:var(--logo); font-weight:800; font-size:34px; margin-bottom:14px}
+  .tHow{font-size:15px; line-height:1.55; color:rgba(244,241,234,.82); max-width:300px; margin:0 auto 26px}
+  .tally{font-size:13px; color:var(--muted); letter-spacing:.06em; margin-bottom:0}
+  .tally b{font-size:28px; font-family:var(--disp); font-weight:800; color:var(--text); display:block; letter-spacing:0; margin-top:2px}
+  #transition .btn{max-width:360px; width:100%; margin:0}
+
+  /* SUMMARY */
+  #summary{overflow-y:auto; align-items:center}
+  @keyframes sumImg{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:scale(1)}}
+  @keyframes sumRise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+  #summary.on #shareImg{animation:sumImg .5s cubic-bezier(.34,1.1,.5,1) both}
+  #summary.on #sumActions>*{animation:sumRise .42s ease both}
+  #summary.on #sumStats{animation-delay:.14s}
+  #summary.on .shareRow{animation-delay:.24s}
+  .shareRow{display:flex; gap:8px; width:100%; max-width:330px; margin:0 auto}
+  .shareRow .btn{flex:1; max-width:none; margin:0}
+  #downloadCardBtn{flex:0 0 auto; width:auto; padding-left:18px; padding-right:18px}
+  #shareImg{cursor:pointer; -webkit-tap-highlight-color:transparent}
+  #shareImg:active{transform:scale(.992)}
+  #copyToast{position:fixed; left:50%; bottom:13%; transform:translateX(-50%) translateY(8px); background:rgba(20,18,24,.96); border:1px solid var(--line2,rgba(255,255,255,.14)); color:var(--text); font-family:var(--disp); font-size:13px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; padding:9px 16px; border-radius:999px; opacity:0; pointer-events:none; transition:opacity .2s, transform .2s; z-index:60; box-shadow:0 8px 28px rgba(0,0,0,.45)}
+  #copyToast.show{opacity:1; transform:translateX(-50%) translateY(0)}
+  #summary.on #bonusSlot{animation-delay:.32s}
+  #summary.on #doneBtn{animation-delay:.40s}
+  #sumStats{display:flex; justify-content:center; gap:20px; flex-wrap:wrap; margin-bottom:4px}
+  .sChip{font-size:13px; color:var(--muted); letter-spacing:.04em}
+  .sChip b{font-variant-numeric:tabular-nums; font-weight:800}
+  .sChip.day b{color:var(--crisp)} .sChip.spd b{color:#7e8ce8}
+  #sumEyebrow{font-size:11px; letter-spacing:.2em; text-transform:uppercase; color:var(--muted); margin-bottom:10px}
+  #brainHero{font-family:var(--logo); font-weight:800; font-size:18px; color:var(--muted); margin-bottom:2px; letter-spacing:.06em}
+  #brainNum{font-family:var(--disp); font-weight:800; font-size:64px; line-height:1; margin-bottom:18px}
+  .bars{width:100%; max-width:380px; display:flex; flex-direction:column; gap:13px; margin-bottom:22px}
+  .bar{display:flex; align-items:center; gap:11px}
+  .bar .bnm{width:74px; font-size:13px; font-weight:700; color:var(--text); display:flex; align-items:center; gap:6px}
+  .bar .btrack{flex:1; height:14px; border-radius:999px; background:var(--surface2); overflow:hidden}
+  .bar .bfill{height:100%; width:0; border-radius:999px; transition:width .9s cubic-bezier(.2,.7,.2,1)}
+  .bar .bval{width:30px; text-align:right; font-weight:800; font-size:15px; font-variant-numeric:tabular-nums}
+  #shareImg{width:100%; max-width:none; border-radius:16px; display:block; margin:0 0 18px; border:1px solid var(--line)}
+  #summary .btn{max-width:330px; margin:0 auto}
+  #sumActions{width:100%; margin-top:auto; display:flex; flex-direction:column; gap:10px; align-items:center}
+  #countdown{font-size:13px; color:var(--muted); letter-spacing:.05em; text-align:center; margin-top:6px}
+  #countdown b{color:var(--crisp); font-variant-numeric:tabular-nums}
+  .devReset{margin-top:14px; font-size:11px; color:var(--muted2); text-decoration:underline; cursor:pointer; background:none; border:none}
+  #bonusSlot{width:100%; display:flex; flex-direction:column; gap:8px; align-items:center}
+  .btn-bonus{max-width:330px; background:var(--surface); border:1px solid var(--line2); color:var(--text); font-weight:700}
+
+  /* P1: short-viewport containment — keep every screen on a single layer, no scroll */
+  @media (max-height:850px){
+    .screen{padding:18px 20px max(16px,env(safe-area-inset-bottom))}
+    #intro .mark{margin:10px 0 8px}
+    .mark span{width:46px; height:58px; font-size:22px}
+    .subtitle{font-size:13px; line-height:1.45}
+    .domainRow{gap:8px} .dpill{padding:10px 13px}
+    .btn{padding:13px 16px; font-size:15px} .btn-primary{font-size:15px}
+    #shareImg{max-height:none; width:100%; max-width:none; margin:0 0 12px}
+    #sumActions{gap:8px} #countdown{margin-top:2px} .devReset{margin-top:8px}
+  }
+  @media (max-height:740px){
+    #shareImg{max-height:none}
+    .mark span{width:42px; height:52px; font-size:22px}
+    .dpill .ico{width:32px; height:32px; font-size:18px}
+  }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- INTRO -->
+  <section id="intro" class="screen on">
+    <div class="introTop">
+      <div class="mark"><span>F</span><span>A</span><span>D</span><span>E</span></div>
+      <div class="subtitle">Everything fades.<br><b>How much can you hold?</b></div>
+    </div>
+    <div class="domainRow" id="domainRow"></div>
+    <div class="introBottom">
+      <button class="btn btn-primary" id="startBtn">START TODAY’S FADE</button>
+      <button class="btn btn-ghost" id="replayBtn" style="display:none">Play again</button>
+      <div class="footnote" id="introFoot"></div>
+      <div class="buildStamp">build __BUILD__</div>
+    </div>
+  </section>
+
+  <!-- LEG -->
+  <section id="leg" class="screen">
+    <div class="legTime"><div class="legTimeFill" id="legTimeFill"></div></div>
+    <div class="legbar">
+      <div class="pmap" id="legMap"></div>
+      <div class="row">
+        <span class="legLeft"><span class="legTag" id="legTag">MEMORY</span><span class="preview" id="legPreview" style="display:none">demo</span></span>
+        <span class="legHud" id="legHud"></span>
+        <button class="finishBtn" id="finishBtn">Finish</button>
+      </div>
+    </div>
+    <div id="legHost"></div>
+  </section>
+
+  <!-- TRANSITION -->
+  <section id="transition" class="screen">
+    <div class="tTop">
+      <div class="pmap" id="transMap"></div>
+      <div class="tLeg" id="tLeg">Leg 1 of 3</div>
+    </div>
+    <div class="tMid">
+      <div class="tIco" id="tIco">🧊</div>
+      <div class="tName" id="tName">Spatial</div>
+      <div class="tHow" id="tHow"></div>
+      <div class="tally">score so far<b id="tTally">—</b></div>
+    </div>
+    <button class="btn btn-primary" id="contBtn">Continue <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
+  </section>
+
+  <!-- SUMMARY -->
+  <section id="summary" class="screen">
+    <img id="shareImg" alt="your FADE clarity card"/>
+    <div id="sumActions">
+      <div id="sumStats"></div>
+      <div class="shareRow">
+        <button class="btn btn-primary" id="shareBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>Share</button>
+        <button class="btn" id="downloadCardBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Save</button>
+      </div>
+      <div id="bonusSlot"></div>
+      <button class="btn btn-ghost" id="doneBtn">Done</button>
+      <button class="devReset" id="devReset">replay (dev)</button>
+    </div>
+    <div id="copyToast">Copied ✓</div>
+  </section>
+
+</div>
+
+<!-- embedded games (filled at assembly time) -->
+<script type="text/html" id="g-memory">__GAME_MEMORY__</script>
+<script type="text/html" id="g-spatial">__GAME_SPATIAL__</script>
+<script type="text/html" id="g-speed">__GAME_SPEED__</script>
+<script type="text/html" id="g-logic">__GAME_LOGIC__</script>
+
+<script>
+"use strict";
+const $=s=>document.querySelector(s);
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+
+const DOMAINS=[
+  {key:'memory', name:'Memory', icon:'🧠', verb:'remember', hex:'#3eb597', desc:'Match the pairs',  src:'g-memory',  badge:'',     cap:80,  how:'Tap two cards to find a pair. They fade as you play — match fast, and clear the board before it’s gone.'},
+  {key:'spatial',name:'Spatial',icon:'🧊', verb:'rotate',   hex:'#4fb0e4', desc:'Rotate the shape', src:'g-spatial', badge:'',     cap:60,  how:'A flat cube flashes, then fades. Pick the 3D shape it folds into — from memory.'},
+  {key:'logic',  name:'Logic',  icon:'⚖️', verb:'solve',    hex:'#a87fd4', desc:'Crack the code',src:'g-logic',   badge:'',     cap:100, how:'Every emoji hides a number. Crack the clues before they fade, then pick the answer.'},
+  {key:'speed',  name:'Speed',  icon:'⚡', verb:'sort',     hex:'#7e8ce8', desc:'Fast decisions', src:'g-speed',   badge:'BONUS', cap:55, bonus:true,  how:'Swipe right if the card fits the rule, left if not. It speeds up — one wrong call ends the run.'},
+];
+
+/* ---- daily number (LOCAL midnight) ---- */
+function dailyNumber(){
+  const launch=new Date(2024,0,1), now=new Date();
+  const today=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+  return Math.floor((today-launch)/86400000)+1;
+}
+function msToLocalMidnight(){ const now=new Date(); return new Date(now.getFullYear(),now.getMonth(),now.getDate()+1)-now; }
+function fmtHMS(ms){ const t=Math.max(0,Math.floor(ms/1000)),h=Math.floor(t/3600),m=Math.floor((t%3600)/60),s=t%60;
+  return `${h}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`; }
+
+const KEY='fadeSuite.v2', DN=dailyNumber();
+const CORE_N=3;   // measured legs (Memory, Spatial, Logic); Speed is the bonus
+/* ---- audio: shared palette (matches the legs) ---- */
+let AC=null, SND=true;
+function ac(){ try{ if(!AC) AC=new (window.AudioContext||window.webkitAudioContext)(); if(AC.state==='suspended') AC.resume(); }catch(e){} return AC; }
+function tone(freq,dur,type,gain,delay){ if(!SND) return; const c=ac(); if(!c) return;
+  const t=c.currentTime+(delay||0); const o=c.createOscillator(), g=c.createGain();
+  o.type=type||'sine'; o.frequency.value=freq; o.connect(g); g.connect(c.destination);
+  g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(gain||0.16,t+0.012);
+  g.gain.exponentialRampToValueAtTime(0.0001,t+dur); o.start(t); o.stop(t+dur+0.03); }
+function buzz(p){ if(navigator.vibrate){ try{navigator.vibrate(p);}catch(e){} } }
+const SFX={
+  tap(){ tone(440,0.09,'sine',0.12); buzz(8); },
+  reveal(){ [523,659,784,1047].forEach((f,i)=>tone(f,0.20,'triangle',0.13,i*0.09)); buzz([0,12,30,18]); },
+};
+let S={dn:DN, idx:0, results:[], done:false, started:false, bonus:null};
+function load(){
+  try{ const o=JSON.parse(localStorage.getItem(KEY)); if(!o) return;
+    if(o.done){ if(o.dn===DN) S=o; }   // completed today → show result; an old finished day → ignore (start fresh)
+    else { S=o; }                       // in-progress → always resume, even across midnight (DN stays locked)
+  }catch(e){}
+}
+function save(){ try{ localStorage.setItem(KEY,JSON.stringify(S)); }catch(e){} }
+function brainSoFar(){ return S.results.length ? Math.round(S.results.reduce((a,r)=>a+r.score,0)/S.results.length) : null; }
+function brainFinal(){ return Math.round(S.results.slice(0,CORE_N).reduce((a,r)=>a+(r?r.score:0),0)/CORE_N); }
+function clarityTier(n){ return n>=85?'Sharp':n>=65?'Clear':n>=40?'Hazy':'Foggy'; }
+const SKEY='fadeSuite.streak', OKEY='fadeSuite.onboarded';
+function dayStreak(){ try{ const r=JSON.parse(localStorage.getItem(SKEY)||'null'); if(!r) return 0; return (r.last===DN||r.last===DN-1) ? (r.count||0) : 0; }catch(e){ return 0; } }
+function bumpStreak(){ try{ const r=JSON.parse(localStorage.getItem(SKEY)||'null')||{count:0,last:-999}; if(r.last!==DN){ r.count=(r.last===DN-1)?(r.count+1):1; r.last=DN; localStorage.setItem(SKEY,JSON.stringify(r)); } return r.count; }catch(e){ return 1; } }
+function onboarded(){ try{ return !!localStorage.getItem(OKEY); }catch(e){ return false; } }
+function setOnboarded(){ try{ localStorage.setItem(OKEY,'1'); }catch(e){} }
+
+function show(id){ document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on')); $('#'+id).classList.add('on'); }
+function progressMap(el, currentIdx){
+  let html='';
+  for(let i=0;i<CORE_N;i++){
+    html+=`<div class="pnode ${i<currentIdx?'done':''} ${i===currentIdx?'cur':''}"></div>`;
+    if(i<CORE_N-1) html+=`<div class="pseg ${i<currentIdx?'done':''}"></div>`;
+  }
+  el.innerHTML=html;
+}
+function gsrc(id){ const el=document.getElementById(id); return el ? el.textContent.split('<\\/script>').join('</'+'script>') : ''; }
+
+/* ---------------- INTRO ---------------- */
+function renderIntro(){
+  const row=$('#domainRow'); row.innerHTML='';
+  DOMAINS.forEach((d,i)=>{
+    const done=S.results[i];
+    const numHtml = d.bonus
+      ? `<span class="pill bonus">BONUS</span>`
+      : (done?`<span class="pill" style="background:${d.hex}22;color:${d.hex}">${done.score}</span>`:'');
+    const el=document.createElement('div'); el.className='dpill';
+    el.innerHTML=`<div class="ico" style="background:${d.hex}22;color:${d.hex}">${d.icon}</div>
+      <div class="meta"><div class="nm">${d.name}</div><div class="dm">${d.desc}</div></div>
+      <div class="num">${numHtml}</div>`;
+    row.appendChild(el);
+  });
+  // F·A·D·E tiles double as a macro progress tracker — each locks to its domain colour as its leg completes
+  const letters=document.querySelectorAll('#intro .mark span');
+  [0,1,2].forEach(i=>{ const sp=letters[i]; if(sp) sp.classList.toggle('done', !!S.results[i]); });
+  if(letters[3]) letters[3].classList.toggle('done', !!S.bonus);   // E tile lights when the bonus is played
+  const btn=$('#startBtn'), foot=$('#introFoot'), rb=$('#replayBtn');
+  if(S.done){ const ds=dayStreak(); btn.innerHTML='See today’s result <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>'; rb.style.display=''; foot.innerHTML=`FADE <b>#${S.dn}</b> complete${ds>0?` · 🔥 <b>day ${ds}</b>`:''} · back tomorrow`; }
+  else if(S.idx>0){ rb.style.display='none'; btn.textContent=`Resume · Game ${S.idx+1} of ${CORE_N}`; foot.innerHTML=`FADE <b>#${S.dn}</b> · ${S.idx} of ${CORE_N} done`; }
+  else { rb.style.display='none'; btn.textContent='START TODAY’S FADE'; foot.innerHTML=`FADE <b>#${S.dn}</b> · one run per day`; }
+  show('intro');
+}
+
+/* ---------------- LEG ---------------- */
+let curIframe=null, donePoll=null, legResolved=false, legTimeRAF=null, legIsBonus=false, pendingBonus=false;
+
+function startLegTimer(d){
+  cancelAnimationFrame(legTimeRAF);
+  const fill=$('#legTimeFill'); if(!fill) return;
+  fill.style.background=d.hex; fill.style.width='100%';
+  const cap=(d.cap||80)*1000, t0=performance.now();
+  (function step(){
+    const rem=Math.max(0, 1-(performance.now()-t0)/cap);
+    fill.style.width=(rem*100)+'%';
+    if(rem<=0){ legTimeRAF=null; if(!legResolved) finishLeg(readScore(DOMAINS[S.idx])); return; }
+    legTimeRAF=requestAnimationFrame(step);
+  })();
+}
+
+function runLeg(i){
+  S.idx=i; save(); legResolved=false; legIsBonus=false;
+  const d=DOMAINS[i];
+  document.documentElement.style.setProperty('--crisp', d.hex);
+  $('#legTag').textContent=d.name.toUpperCase(); $('#legTag').style.color=d.hex;
+  const pv=$('#legPreview');
+  if(d.badge){ pv.style.display='inline-block'; pv.textContent=d.badge; } else pv.style.display='none';
+  progressMap($('#legMap'), i);
+  $('#legHud').innerHTML='';
+  const fb=$('#finishBtn'); fb.style.background=d.hex; fb.classList.remove('ready');
+  $('#legHost').innerHTML='';
+  show('leg');
+  startLegTimer(d);
+  mountGame(d);   // P2: all four legs are real games (Logic = the algebra engine); no stub path
+}
+
+function mountGame(d){
+  fb_label('Finish');
+  $('#finishBtn').classList.remove('ready');
+  const f=document.createElement('iframe'); f.className='gameFrame'; f.setAttribute('allow','autoplay');
+  f.srcdoc=gsrc(d.src); curIframe=f;
+  $('#legHost').appendChild(f);
+  f.onload=()=>{
+    try{
+      const cw=f.contentWindow;
+      if(d.key==='memory') cw.eval("typeof start==='function'&&start('daily',{dnOverride:"+DN+"})");
+      else if(d.key==='speed'||d.key==='logic') cw.eval("typeof start==='function'&&start()");
+      // spatial (fold) auto-runs on load
+    }catch(e){}
+    startDonePoll(d);
+  };
+}
+function startDonePoll(d){
+  clearInterval(donePoll);
+  donePoll=setInterval(()=>{
+    try{
+      const cw=curIframe&&curIframe.contentWindow; if(!cw) return;
+      try{ const h=cw.eval('(typeof G!=="undefined"&&G&&G.hud)?String(G.hud):""'); $('#legHud').innerHTML=h; }catch(e){}
+      let done=false;
+      if(d.key==='memory'||d.key==='logic') done=cw.eval('!!(typeof G!=="undefined"&&G&&G.done)');
+      else if(d.key==='spatial') done=cw.eval('!!(typeof G!=="undefined"&&G&&G.done)');
+      else if(d.key==='speed') done=cw.eval('!!(typeof G!=="undefined"&&G&&G.done)');
+      if(done){
+        if(legIsBonus){ clearInterval(donePoll); donePoll=null; setTimeout(()=>finishBonus(d),500); return; }
+        const sc=readScore(d); if(sc==null) return;   // done flag set but score not readable yet — keep polling
+        clearInterval(donePoll); donePoll=null; setTimeout(()=>finishLeg(sc),500);
+      }
+    }catch(e){}
+  },300);
+}
+function fb_label(t){ $('#finishBtn').textContent=t; }
+
+function readScore(d){
+  const cw = curIframe && curIframe.contentWindow;
+  try{
+    if(d.key==='memory'){
+      const done=cw.eval('!!(typeof G!=="undefined"&&G&&G.done)');
+      const c=cw.eval('(typeof G!=="undefined"&&G&&typeof G.clarity==="number")?Math.round(G.clarity):-1');
+      if(done&&c>=0) return clamp(c,0,100);
+      if(c>=0) return clamp(c,0,100);
+      return null;
+    }
+    if(d.key==='speed'){
+      if(cw.eval('typeof G!=="undefined"&&G&&typeof G.score==="number"?1:0')) return clamp(cw.eval('Math.round(G.score)'),0,100);
+      return 72;
+    }
+    if(d.key==='logic'){
+      const done=cw.eval('!!(typeof G!=="undefined"&&G&&G.done)');
+      if(done) return clamp(cw.eval('Math.round(G.score)'),0,100);
+      if(cw.eval('typeof G!=="undefined"&&!!G')) return clamp(cw.eval('Math.round(G.correct/G.rounds.length*100)'),0,100);
+      return 70;
+    }
+  }catch(e){}
+  if(d.key==='spatial'){
+    try{ if(cw.eval('typeof G!=="undefined"&&G&&G.done&&typeof G.score==="number"?1:0')) return clamp(cw.eval('Math.round(G.score)'),0,100); }catch(e){}
+    try{ if(cw.eval('typeof G!=="undefined"&&G&&G.n?1:0')) return clamp(cw.eval('Math.round(40 + (G.correct/G.n)*60)'),0,100); }catch(e){}
+    return null;   // no real score yet — caller treats as "leg not finished" (no fabricated score)
+  }
+  return null;
+}
+
+$('#finishBtn').onclick=()=>{
+  const d=legIsBonus?DOMAINS[3]:DOMAINS[S.idx];
+  if(legIsBonus){ finishBonus(d); return; }
+  const sc=readScore(d);
+  finishLeg(sc==null?0:sc);
+};
+
+function finishLeg(score){
+  if(legResolved) return; legResolved=true;
+  clearInterval(donePoll); donePoll=null;
+  cancelAnimationFrame(legTimeRAF); legTimeRAF=null;
+  curIframe=null; $('#legHost').innerHTML='';
+  S.results[S.idx]={key:DOMAINS[S.idx].key, domain:DOMAINS[S.idx].name, score:clamp(Math.round(score),0,100)};
+  save();
+  const next=S.idx+1;
+  if(next<CORE_N){ S.idx=next; save(); showTransition(next); }
+  else { S.done=true; if(S.bonus===undefined) S.bonus=null; setOnboarded(); S.dayStreak=bumpStreak(); save(); showSummary(); }
+}
+
+/* ---------------- BONUS (Speed) ---------------- */
+function runBonus(){
+  legResolved=false; legIsBonus=true; pendingBonus=false;
+  const d=DOMAINS[3];   // speed
+  document.documentElement.style.setProperty('--crisp', d.hex);
+  document.documentElement.style.setProperty('--glow', glowOf(d.hex));
+  $('#legTag').textContent=d.name.toUpperCase(); $('#legTag').style.color=d.hex;
+  const pv=$('#legPreview'); pv.style.display='inline-block'; pv.textContent='BONUS';
+  progressMap($('#legMap'), CORE_N);   // all three core dots done
+  $('#legHud').innerHTML='';
+  const fb=$('#finishBtn'); fb.style.background=d.hex; fb.classList.remove('ready');
+  $('#legHost').innerHTML='';
+  show('leg');
+  startLegTimer(d);
+  mountGame(d);
+}
+function finishBonus(d){
+  if(legResolved) return; legResolved=true;
+  clearInterval(donePoll); donePoll=null;
+  cancelAnimationFrame(legTimeRAF); legTimeRAF=null;
+  const cw=curIframe&&curIframe.contentWindow;
+  let streak=0; try{ streak=cw.eval('(typeof G!=="undefined"&&G&&typeof G.streak==="number")?G.streak:0'); }catch(e){}
+  const score=readScore(d);
+  curIframe=null; $('#legHost').innerHTML='';
+  S.bonus={score:clamp(Math.round(score),0,100), streak:Math.max(0,streak|0)};
+  legIsBonus=false; save(); showSummary();
+}
+
+/* ---------------- TRANSITION ---------------- */
+function showTransition(idx, bonus){
+  const d=DOMAINS[idx];
+  pendingBonus=!!bonus;
+  document.documentElement.style.setProperty('--crisp', d.hex);
+  document.documentElement.style.setProperty('--glow', glowOf(d.hex));
+  progressMap($('#transMap'), bonus?CORE_N:idx);
+  $('#tLeg').textContent = bonus ? 'Bonus round' : `Game ${idx+1} of ${CORE_N}`;
+  const ico=$('#tIco'); ico.textContent=d.icon; ico.style.background=d.hex+'22';
+  const nm=$('#tName'); nm.textContent=d.name; nm.style.color=d.hex;
+  // instructions are always shown up front (the rarely-seen bonus included)
+  $('#tHow').textContent=d.how||'';
+  $('#tHow').style.display='block';
+  const tw=document.querySelector('#transition .tally'); if(tw) tw.style.display = (bonus||idx===0) ? 'none' : 'block';
+  $('#tTally').textContent=brainSoFar()??'—';
+  $('#contBtn').innerHTML = (bonus ? 'Start bonus' : 'Continue') + ' <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>';
+  $('#contBtn').style.background=`linear-gradient(180deg,${d.hex},${shade(d.hex,-18)})`;
+  show('transition');
+}
+$('#contBtn').onclick=()=>{ ac(); pendingBonus ? runBonus() : runLeg(S.idx); };
+
+/* ---------------- SUMMARY ---------------- */
+let cdTimer=null;
+function showSummary(){
+  document.documentElement.style.setProperty('--crisp','#f4f1ea');
+  document.documentElement.style.setProperty('--glow','rgba(255,255,255,.16)');
+  const brain=brainFinal();
+  const ds=S.dayStreak||dayStreak();
+  let chips='';
+  if(ds>0) chips+=`<span class="sChip day">🔥 <b>${ds}</b>-day streak</span>`;
+  if(S.bonus && S.bonus.streak>0) chips+=`<span class="sChip spd">⚡ Speed best <b>${S.bonus.streak}</b></span>`;
+  $('#sumStats').innerHTML=chips;
+  renderBonusSlot();
+  show('summary'); renderShareImage(brain); SFX.reveal();
+}
+function renderBonusSlot(){
+  const slot=$('#bonusSlot'); slot.innerHTML='';
+  if(S.bonus){
+    const ch=document.createElement('button'); ch.className='btn btn-bonus'; ch.id='challengeBtn'; ch.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>Challenge a friend';
+    ch.onclick=challengeShare; slot.appendChild(ch);
+  } else {
+    const b=document.createElement('button'); b.className='btn btn-bonus'; b.id='bonusBtn';
+    b.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>Bonus — how long can you last?';
+    b.onclick=()=>showTransition(3,true);
+    slot.appendChild(b);
+  }
+}
+$('#doneBtn').onclick=()=>renderIntro();
+$('#devReset').onclick=()=>{ try{localStorage.removeItem(KEY);}catch(e){} S={dn:DN,idx:0,results:[],done:false,bonus:null}; renderIntro(); };
+
+function barcodeRows(){
+  const SQ={memory:'🟩', spatial:'🟦', logic:'🟪'};
+  return DOMAINS.slice(0,CORE_N).map((d,i)=>{
+    const sc=(S.results[i]&&S.results[i].score)||0;
+    const filled=Math.max(0,Math.min(5,Math.round(sc/20)));
+    return `${d.icon} ${SQ[d.key].repeat(filled)}${'⬛'.repeat(5-filled)}`;
+  });
+}
+function shareText(brain){
+  const ds=S.dayStreak||dayStreak();
+  const head=`FADE #${S.dn} · clarity ${brain} (${clarityTier(brain)})${ds>1?` · day ${ds}`:''}`;
+  return `${head}\n\n${barcodeRows().join('\n')}\n\nfadeagain.com`;
+}
+function copyToast(){
+  const t=$('#copyToast'); if(!t) return;
+  t.classList.add('show'); clearTimeout(t._h);
+  t._h=setTimeout(()=>t.classList.remove('show'),1500);
+}
+$('#shareImg').onclick=async()=>{
+  try{ await navigator.clipboard.writeText(shareText(brainFinal())); copyToast(); buzz(8); }
+  catch(e){}
+};
+function challengeText(){ const st=S.bonus?S.bonus.streak:0; return `FADE #${S.dn} ⚡\nSpeed streak: ${st}\nThink you can last longer?\nfadeagain.com`; }
+async function nativeOrCopy(payload, btn, restore){
+  try{
+    if(payload.file && navigator.canShare && navigator.canShare({files:[payload.file]})){ await navigator.share({files:[payload.file], text:payload.text}); return; }
+    if(navigator.share){ await navigator.share({text:payload.text}); return; }
+  }catch(e){ if(e && e.name==='AbortError') return; }   // user dismissed the sheet — don't fall through
+  try{ await navigator.clipboard.writeText(payload.text); if(btn){ const o=btn.innerHTML; btn.textContent='Copied ✓'; setTimeout(()=>btn.innerHTML=o,1700); } }
+  catch(e){ if(btn){ const o=btn.innerHTML; btn.textContent='Copy unavailable here'; setTimeout(()=>btn.innerHTML=o,1700); } }
+}
+function challengeShare(){ nativeOrCopy({text:challengeText()}, $('#challengeBtn'), 'Challenge a friend'); }
+$('#downloadCardBtn').onclick=()=>{
+  if(!shareCanvas) return;
+  // direct download survives in-app webviews (X/IG/Threads) where navigator.share blobs often fail
+  const link=document.createElement('a');
+  link.download=`fade-${S.dn}.png`;
+  link.href=shareCanvas.toDataURL('image/png');
+  link.click();
+};
+$('#shareBtn').onclick=async()=>{ const b=$('#shareBtn'); const txt=shareText(brainFinal()); let file=null;
+  try{ if(shareCanvas){ const blob=await new Promise(r=>shareCanvas.toBlob(r,'image/png')); file=new File([blob],`fade-${S.dn}.png`,{type:'image/png'}); } }catch(e){}
+  nativeOrCopy({text:txt, file}, b, 'Share'); };
+
+let shareCanvas=null;
+async function renderShareImage(brain){
+  // P3: the canvas uses Syne 800 (wordmark) + Plus Jakarta Sans weights. document.fonts.ready
+  // alone can resolve before these specific faces are rasterised, so request each face explicitly,
+  // then wait a frame so the typography is fully baked before the first fillText.
+  try{
+    if(document.fonts && document.fonts.load){
+      await Promise.all([
+        document.fonts.load('800 64px "Syne"'),
+        document.fonts.load('800 42px "Plus Jakarta Sans"'),
+        document.fonts.load('700 17px "Plus Jakarta Sans"'),
+        document.fonts.load('600 20px "Plus Jakarta Sans"'),
+        document.fonts.ready
+      ]);
+    }
+  }catch(e){}
+  await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));   // let the frame settle
+  const W=660,H=820, cv=document.createElement('canvas'); cv.width=W; cv.height=H; const x=cv.getContext('2d'); shareCanvas=cv;
+  x.fillStyle='#0b0a0d'; x.fillRect(0,0,W,H);
+  const g=x.createRadialGradient(W*0.8,-40,40,W*0.8,-40,520); g.addColorStop(0,'rgba(79,176,228,0.13)'); g.addColorStop(1,'rgba(79,176,228,0)');
+  x.fillStyle=g; x.fillRect(0,0,W,H);
+  // Aurora masthead — the suite gradient is the "glue"; it lives only on shell surfaces, never the legs
+  const aur=x.createLinearGradient(0,0,W,0); aur.addColorStop(0,'#3eb597'); aur.addColorStop(0.36,'#4fb0e4'); aur.addColorStop(0.72,'#7e8ce8'); aur.addColorStop(1,'#a87fd4');
+  x.fillStyle=aur; x.fillRect(0,0,W,6);
+  const PAD=56;
+  x.textBaseline='alphabetic';
+  x.fillStyle='#f4f1ea'; x.font="800 64px Syne, sans-serif"; x.textAlign='left'; x.fillText('FADE',PAD,110);
+  x.fillStyle='#8d8896'; x.font="600 26px 'Plus Jakarta Sans', sans-serif"; x.textAlign='right'; x.fillText(`#${S.dn}`,W-PAD,104);
+  x.textAlign='left'; x.fillStyle='#807c8a'; x.font="700 20px 'Plus Jakarta Sans', sans-serif"; x.fillText('TODAY’S CLARITY',PAD,178);
+  x.fillStyle='#f4f1ea'; x.font="800 110px 'Plus Jakarta Sans', sans-serif"; x.fillText(String(brain),PAD-2,286);
+  const numW=x.measureText(String(brain)).width;
+  x.fillStyle=aur; x.font="800 30px 'Plus Jakarta Sans', sans-serif"; x.textAlign='left'; x.fillText(clarityTier(brain), PAD-2+numW+20, 286);
+  let by=360; const barW=W-PAD*2-190, barX=PAD+158, barH=26;
+  DOMAINS.slice(0,CORE_N).forEach((d,i)=>{
+    const sc=(S.results[i]&&S.results[i].score)||0;
+    x.fillStyle='#cfc9c0'; x.font="700 23px 'Plus Jakarta Sans', sans-serif"; x.textAlign='left'; x.fillText(`${d.icon} ${d.name}`,PAD,by+barH-5);
+    const filled=Math.max(0,Math.min(5,Math.round(sc/20))), sq=barH, gap=12;
+    for(let k=0;k<5;k++){ roundRect(x, barX+k*(sq+gap), by, sq, sq, 7); x.fillStyle = k<filled ? d.hex : 'rgba(255,255,255,0.10)'; x.fill(); }
+    x.fillStyle=d.hex; x.font="800 26px 'Plus Jakarta Sans', sans-serif"; x.textAlign='right'; x.fillText(String(sc),W-PAD,by+barH-3);
+    by+=barH+34;
+  });
+  // FOMO countdown in a crisp panel, kept clear of the social-crop zone at the bottom
+  const pY=by+22, pH=92, pX=PAD, pW=W-PAD*2;
+  roundRect(x,pX,pY,pW,pH,18); x.fillStyle='rgba(255,255,255,0.05)'; x.fill();
+  roundRect(x,pX,pY,pW,pH,18); x.strokeStyle='rgba(255,255,255,0.10)'; x.lineWidth=1; x.stroke();
+  const cY=pY+pH/2;
+  x.textBaseline='middle';
+  x.fillStyle='#8d8896'; x.font="700 17px 'Plus Jakarta Sans', sans-serif"; x.textAlign='left'; x.fillText('NEXT FADE IN', pX+26, cY);
+  x.fillStyle=aur; x.font="800 42px 'Plus Jakarta Sans', sans-serif"; x.textAlign='right'; x.fillText(fmtHMS(msToLocalMidnight()), pX+pW-26, cY);
+  x.textBaseline='alphabetic';
+  // card footer — the domain drives traffic on screenshots (many shares are images, which strip text/links)
+  x.textAlign='center';
+  x.fillStyle='#f4f1ea'; x.font="800 32px Syne, sans-serif"; try{ x.letterSpacing='1px'; }catch(e){}
+  x.fillText('fadeagain.com', W/2, pY+pH+62);
+  try{ x.letterSpacing='0px'; }catch(e){}
+  $('#shareImg').src=cv.toDataURL('image/png');
+}
+function roundRect(x,X,Y,w,h,rad){ rad=Math.min(rad,h/2,w/2); x.beginPath(); x.moveTo(X+rad,Y); x.arcTo(X+w,Y,X+w,Y+h,rad); x.arcTo(X+w,Y+h,X,Y+h,rad); x.arcTo(X,Y+h,X,Y,rad); x.arcTo(X,Y,X+w,Y,rad); x.closePath(); }
+function shade(hex,amt){ const n=parseInt(hex.slice(1),16); let r=clamp((n>>16)+amt,0,255),g=clamp(((n>>8)&255)+amt,0,255),b=clamp((n&255)+amt,0,255); return '#'+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1); }
+function glowOf(hex){ const n=parseInt(hex.slice(1),16); return `rgba(${(n>>16)&255},${(n>>8)&255},${n&255},.32)`; }
+
+/* ---------------- boot ---------------- */
+console.log('FADE · build __BUILD__');
+$('#startBtn').onclick=()=>{
+  ac();
+  if(S.done){ showSummary(); return; }
+  if(!S.started){ S.started=true; S.dn=DN; }   // lock today's number for the whole run; midnight can't move it
+  save();
+  showTransition(S.idx);
+};
+$('#replayBtn').onclick=()=>{ S={dn:DN, idx:0, results:[], done:false, started:true, bonus:null}; save(); showTransition(0); };
+// dev-only affordances are stripped in production; append ?dev=1 to expose them
+if(new URLSearchParams(location.search).has('dev')){ document.body.classList.add('dev'); }
+else { document.querySelectorAll('#devReset,.buildStamp').forEach(e=>e.remove()); }
+load(); renderIntro();
+</script>
+</body>
+</html>
