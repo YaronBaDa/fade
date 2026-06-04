@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"/>
-<meta name="fade-build" content="2026-06-04-0005"/>
+<meta name="fade-build" content="2026-06-04-0112"/>
 <title>FADE — how much can you hold?</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -167,6 +167,7 @@
   .devReset{margin-top:14px; font-size:11px; color:var(--muted2); text-decoration:underline; cursor:pointer; background:none; border:none}
   #bonusSlot{width:100%; display:flex; flex-direction:column; gap:8px; align-items:center}
   .btn-bonus{max-width:330px; background:var(--surface); border:1px solid var(--line2); color:var(--text); font-weight:700}
+  #bonusBtn{background:var(--text); color:var(--bg); border:none; font-weight:800; box-shadow:0 10px 28px rgba(0,0,0,.45)}
 
   /* P1: short-viewport containment — keep every screen on a single layer, no scroll */
   @media (max-height:850px){
@@ -200,7 +201,7 @@
       <button class="btn btn-primary" id="startBtn">START TODAY’S FADE</button>
       <button class="btn btn-ghost" id="replayBtn" style="display:none">Play again</button>
       <div class="footnote" id="introFoot"></div>
-      <div class="buildStamp">build 2026-06-04-0005</div>
+      <div class="buildStamp">build 2026-06-04-0112</div>
     </div>
   </section>
 
@@ -2414,7 +2415,6 @@ function showSummary(){
   const brain=brainFinal();
   const ds=S.dayStreak||dayStreak();
   let chips='';
-  if(ds>0) chips+=`<span class="sChip day">🔥 <b>${ds}</b>-day streak</span>`;
   if(S.bonus && S.bonus.streak>0) chips+=`<span class="sChip spd">⚡ Speed best <b>${S.bonus.streak}</b></span>`;
   $('#sumStats').innerHTML=chips;
   renderBonusSlot();
@@ -2504,14 +2504,23 @@ async function renderShareImage(brain){
   const aur=x.createLinearGradient(0,0,W,0); aur.addColorStop(0,'#3eb597'); aur.addColorStop(0.36,'#4fb0e4'); aur.addColorStop(0.72,'#7e8ce8'); aur.addColorStop(1,'#a87fd4');
   x.fillStyle=aur; x.fillRect(0,0,W,6);
   const PAD=56;
+  x.textBaseline='middle';
+  const headC=104;
+  x.fillStyle='#f4f1ea'; x.font="800 64px Syne, sans-serif"; x.textAlign='left'; x.fillText('FADE',PAD,headC);
+  x.textAlign='right';
+  const cardDs=S.dayStreak||dayStreak();
+  if(cardDs>0){
+    x.fillStyle='#8d8896'; x.font="600 26px 'Plus Jakarta Sans', sans-serif"; x.fillText(`#${S.dn}`,W-PAD,headC-15);
+    x.fillStyle='#cfc9c0'; x.font="700 19px 'Plus Jakarta Sans', sans-serif"; x.fillText(`🔥 ${cardDs}-day streak`,W-PAD,headC+16);
+  } else {
+    x.fillStyle='#8d8896'; x.font="600 26px 'Plus Jakarta Sans', sans-serif"; x.fillText(`#${S.dn}`,W-PAD,headC);
+  }
   x.textBaseline='alphabetic';
-  x.fillStyle='#f4f1ea'; x.font="800 64px Syne, sans-serif"; x.textAlign='left'; x.fillText('FADE',PAD,110);
-  x.fillStyle='#8d8896'; x.font="600 26px 'Plus Jakarta Sans', sans-serif"; x.textAlign='right'; x.fillText(`#${S.dn}`,W-PAD,104);
-  x.textAlign='left'; x.fillStyle='#807c8a'; x.font="700 20px 'Plus Jakarta Sans', sans-serif"; x.fillText('TODAY’S CLARITY',PAD,178);
-  x.fillStyle='#f4f1ea'; x.font="800 110px 'Plus Jakarta Sans', sans-serif"; x.fillText(String(brain),PAD-2,286);
+  x.textAlign='left'; x.fillStyle='#807c8a'; x.font="700 20px 'Plus Jakarta Sans', sans-serif"; x.fillText('TODAY’S CLARITY',PAD,210);
+  x.fillStyle='#f4f1ea'; x.font="800 110px 'Plus Jakarta Sans', sans-serif"; x.fillText(String(brain),PAD-2,318);
   const numW=x.measureText(String(brain)).width;
-  x.fillStyle=aur; x.font="800 30px 'Plus Jakarta Sans', sans-serif"; x.textAlign='left'; x.fillText(clarityTier(brain), PAD-2+numW+20, 286);
-  let by=360; const barW=W-PAD*2-190, barX=PAD+158, barH=26;
+  x.fillStyle=aur; x.font="800 30px 'Plus Jakarta Sans', sans-serif"; x.textAlign='left'; x.fillText(clarityTier(brain), PAD-2+numW+20, 318);
+  let by=392; const barW=W-PAD*2-190, barX=PAD+158, barH=26;
   DOMAINS.slice(0,CORE_N).forEach((d,i)=>{
     const sc=(S.results[i]&&S.results[i].score)||0;
     x.fillStyle='#cfc9c0'; x.font="700 23px 'Plus Jakarta Sans', sans-serif"; x.textAlign='left'; x.fillText(`${d.icon} ${d.name}`,PAD,by+barH-5);
@@ -2541,7 +2550,7 @@ function shade(hex,amt){ const n=parseInt(hex.slice(1),16); let r=clamp((n>>16)+
 function glowOf(hex){ const n=parseInt(hex.slice(1),16); return `rgba(${(n>>16)&255},${(n>>8)&255},${n&255},.32)`; }
 
 /* ---------------- boot ---------------- */
-console.log('FADE · build 2026-06-04-0005');
+console.log('FADE · build 2026-06-04-0112');
 $('#startBtn').onclick=()=>{
   ac();
   if(S.done){ showSummary(); return; }
