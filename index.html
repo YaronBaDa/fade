@@ -3,8 +3,20 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"/>
-<meta name="fade-build" content="2026-06-04-0357"/>
+<meta name="fade-build" content="2026-06-05-1051"/>
 <title>FADE — how much can you hold?</title>
+<!-- PostHog product analytics (project token is a public, write-only client key) -->
+<script>
+  !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture register register_once register_for_session unregister unregister_for_session getFeatureFlag getFeatureFlagPayload isFeatureEnabled reloadFeatureFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSessionId getSurveys getActiveMatchingSurveys renderSurvey canRenderSurvey getNextSurveyStep identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags reset get_distinct_id getGroups get_session_id get_session_replay_url alias set_config startSessionRecording stopSessionRecording sessionRecordingStarted captureException loadToolbar get_property getSessionProperty createPersonProfile opt_in_capturing opt_out_capturing has_opted_in_capturing has_opted_out_capturing clear_opt_in_out_capturing debug getPageViewId captureTraceFeedback captureTraceMetric".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+  posthog.init('phc_nBiWf8xKhCYthjjw6up9AiZNBg5TRAD9jGvzgGjZQfrU',{
+    api_host:'https://us.i.posthog.com',
+    persistence:'localStorage',
+    autocapture:false,
+    capture_pageview:false,
+    disable_session_recording:true,
+    bootstrap:{distinctID:(function(){try{var u=localStorage.getItem('fade_uid');if(!u){u=(self.crypto&&crypto.randomUUID)?crypto.randomUUID():('u'+Date.now()+Math.random().toString(36).slice(2));localStorage.setItem('fade_uid',u);}return u;}catch(e){return void 0;}})()}
+  });
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
@@ -201,7 +213,7 @@
       <button class="btn btn-primary" id="startBtn">START TODAY’S FADE</button>
       <button class="btn btn-ghost" id="replayBtn" style="display:none">Play again</button>
       <div class="footnote" id="introFoot"></div>
-      <div class="buildStamp">build 2026-06-04-0357</div>
+      <div class="buildStamp">build 2026-06-05-1051</div>
     </div>
   </section>
 
@@ -2176,6 +2188,27 @@ function fmtHMS(ms){ const t=Math.max(0,Math.floor(ms/1000)),h=Math.floor(t/3600
 
 const KEY='fadeSuite.v2', DN=dailyNumber();
 const CORE_N=3;   // measured legs (Memory, Spatial, Logic); Speed is the bonus
+
+/* ---------------- ANALYTICS (vendor-agnostic) ----------------
+   Sends events to PostHog if present; otherwise no-ops (with optional console
+   debug via window.FADE_DEBUG=true). To connect: add the PostHog snippet in
+   <head> and it starts flowing. uid is a cookieless anonymous id in localStorage. */
+const FA=(function(){
+  let uid;
+  try{ uid=localStorage.getItem('fade_uid'); if(!uid){ uid=(self.crypto&&crypto.randomUUID)?crypto.randomUUID():('u'+Date.now()+Math.random().toString(36).slice(2)); localStorage.setItem('fade_uid',uid); } }catch(e){ uid='anon'; }
+  let last=null, returning=false, daysSince=null;
+  try{ last=localStorage.getItem('fade_last_seen'); }catch(e){}
+  if(last){ returning=true; const d=Math.floor((Date.now()-(+last))/86400000); daysSince=isNaN(d)?null:d; }
+  try{ localStorage.setItem('fade_last_seen', String(Date.now())); }catch(e){}
+  const buildMeta=document.querySelector('meta[name=fade-build]');
+  const SUPER={ uid, build:buildMeta?buildMeta.content:'2026-06-05-1051', mode:'full' };
+  function track(event, props){
+    const payload=Object.assign({day:(typeof DN!=='undefined'?DN:null)}, SUPER, props||{});
+    try{ if(self.posthog && posthog.capture){ posthog.capture(event, payload); } }catch(e){}
+    if(self.FADE_DEBUG) try{ console.log('[track]', event, payload); }catch(e){}
+  }
+  return { track, uid, returning, daysSince };
+})();
 /* ---- audio: shared palette (matches the legs) ---- */
 let AC=null, SND=true;
 function ac(){ try{ if(!AC) AC=new (window.AudioContext||window.webkitAudioContext)(); if(AC.state==='suspended') AC.resume(); }catch(e){} return AC; }
@@ -2353,14 +2386,16 @@ function finishLeg(score){
   curIframe=null; $('#legHost').innerHTML='';
   S.results[S.idx]={key:DOMAINS[S.idx].key, domain:DOMAINS[S.idx].name, score:clamp(Math.round(score),0,100)};
   save();
+  FA.track('leg_completed',{leg:DOMAINS[S.idx].key, leg_index:S.idx, score:S.results[S.idx].score});
   const next=S.idx+1;
   if(next<CORE_N){ S.idx=next; save(); showTransition(next); }
-  else { S.done=true; if(S.bonus===undefined) S.bonus=null; setOnboarded(); S.dayStreak=bumpStreak(); save(); showSummary(); }
+  else { S.done=true; if(S.bonus===undefined) S.bonus=null; setOnboarded(); S.dayStreak=bumpStreak(); FA.track('daily_completed',{clarity:brainFinal(), streak:S.dayStreak}); save(); showSummary(); }
 }
 
 /* ---------------- BONUS (Speed) ---------------- */
 function runBonus(){
   legResolved=false; legIsBonus=true; pendingBonus=false;
+  FA.track('bonus_started');
   const d=DOMAINS[3];   // speed
   document.documentElement.style.setProperty('--crisp', d.hex);
   document.documentElement.style.setProperty('--glow', glowOf(d.hex));
@@ -2383,6 +2418,7 @@ function finishBonus(d){
   const score=readScore(d);
   curIframe=null; $('#legHost').innerHTML='';
   S.bonus={score:clamp(Math.round(score),0,100), streak:Math.max(0,streak|0)};
+  FA.track('bonus_completed',{score:S.bonus.score, streak:S.bonus.streak});
   legIsBonus=false; save(); showSummary();
 }
 
@@ -2453,7 +2489,7 @@ function copyToast(){
   t.classList.add('show'); clearTimeout(t._h);
   t._h=setTimeout(()=>t.classList.remove('show'),1500);
 }
-$('#shareImg').onclick=async()=>{
+$('#shareImg').onclick=async()=>{ FA.track('share_clicked',{surface:'card_tap'});
   try{ await navigator.clipboard.writeText(shareText(brainFinal())); copyToast(); buzz(8); }
   catch(e){}
 };
@@ -2466,8 +2502,8 @@ async function nativeOrCopy(payload, btn, restore){
   try{ await navigator.clipboard.writeText(payload.text); if(btn){ const o=btn.innerHTML; btn.textContent='Copied ✓'; setTimeout(()=>btn.innerHTML=o,1700); } }
   catch(e){ if(btn){ const o=btn.innerHTML; btn.textContent='Copy unavailable here'; setTimeout(()=>btn.innerHTML=o,1700); } }
 }
-function challengeShare(){ nativeOrCopy({text:challengeText()}, $('#challengeBtn'), 'Challenge a friend'); }
-$('#downloadCardBtn').onclick=()=>{
+function challengeShare(){ FA.track('challenge_clicked'); nativeOrCopy({text:challengeText()}, $('#challengeBtn'), 'Challenge a friend'); }
+$('#downloadCardBtn').onclick=()=>{ FA.track('card_downloaded');
   if(!shareCanvas) return;
   // direct download survives in-app webviews (X/IG/Threads) where navigator.share blobs often fail
   const link=document.createElement('a');
@@ -2475,7 +2511,7 @@ $('#downloadCardBtn').onclick=()=>{
   link.href=shareCanvas.toDataURL('image/png');
   link.click();
 };
-$('#shareBtn').onclick=async()=>{ const b=$('#shareBtn'); const txt=shareText(brainFinal()); let file=null;
+$('#shareBtn').onclick=async()=>{ FA.track('share_clicked',{surface:'button'}); const b=$('#shareBtn'); const txt=shareText(brainFinal()); let file=null;
   try{ if(shareCanvas){ const blob=await new Promise(r=>shareCanvas.toBlob(r,'image/png')); file=new File([blob],`fade-${S.dn}.png`,{type:'image/png'}); } }catch(e){}
   nativeOrCopy({text:txt, file}, b, 'Share'); };
 
@@ -2550,19 +2586,22 @@ function shade(hex,amt){ const n=parseInt(hex.slice(1),16); let r=clamp((n>>16)+
 function glowOf(hex){ const n=parseInt(hex.slice(1),16); return `rgba(${(n>>16)&255},${(n>>8)&255},${n&255},.32)`; }
 
 /* ---------------- boot ---------------- */
-console.log('FADE · build 2026-06-04-0357');
+console.log('FADE · build 2026-06-05-1051');
 $('#startBtn').onclick=()=>{
   ac();
-  if(S.done){ showSummary(); return; }
+  if(S.done){ FA.track('result_reopened'); showSummary(); return; }
   if(!S.started){ S.started=true; S.dn=DN; }   // lock today's number for the whole run; midnight can't move it
   save();
+  FA.track('daily_started',{resumed:S.idx>0, from_leg:S.idx});
   showTransition(S.idx);
 };
-$('#replayBtn').onclick=()=>{ S={dn:DN, idx:0, results:[], done:false, started:true, bonus:null}; save(); showTransition(0); };
+$('#replayBtn').onclick=()=>{ S={dn:DN, idx:0, results:[], done:false, started:true, bonus:null}; save(); FA.track('daily_replayed'); showTransition(0); };
 // dev-only affordances are stripped in production; append ?dev=1 to expose them
 if(new URLSearchParams(location.search).has('dev')){ document.body.classList.add('dev'); }
 else { document.querySelectorAll('#devReset,.buildStamp').forEach(e=>e.remove()); }
-load(); renderIntro();
+load();
+FA.track('app_opened',{returning:FA.returning, days_since_last:FA.daysSince, resumed:!!(S&&S.started&&!S.done), already_done:!!(S&&S.done)});
+renderIntro();
 </script>
 </body>
 </html>
