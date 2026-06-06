@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"/>
-<meta name="fade-build" content="2026-06-05-1051"/>
+<meta name="fade-build" content="2026-06-06-0219"/>
 <title>FADE — how much can you hold?</title>
 <!-- PostHog product analytics (project token is a public, write-only client key) -->
 <script>
@@ -59,7 +59,7 @@
   @media (prefers-reduced-motion:reduce){ .mark span{animation:none} }
 
   .btn{appearance:none; border:1px solid var(--line2); background:var(--surface); color:var(--text);
-    font-family:var(--disp); font-weight:700; font-size:15px; padding:15px 18px; border-radius:13px; width:100%;
+    font-family:var(--disp); font-weight:700; font-size:15px; height:48px; padding:0 18px; border-radius:13px; width:100%; white-space:nowrap;
     display:flex; align-items:center; justify-content:center; gap:8px;
     cursor:pointer; transition:transform .08s, filter .15s}
   .btn svg{width:18px; height:18px; flex:none}
@@ -76,9 +76,12 @@
   #intro .mark{margin:18px 0 12px}
   .subtitle{font-size:15px; color:var(--muted); text-align:center; line-height:1.5}
   .subtitle b{color:var(--text); font-weight:700}
-  .domainRow{display:flex; flex-direction:column; gap:10px; width:100%; max-width:340px; margin:0 auto}
-  .dpill{display:flex; align-items:center; gap:13px; padding:13px 15px; border-radius:14px; background:var(--surface); border:1px solid var(--line)}
-  .dpill .ico{width:38px; height:38px; border-radius:10px; display:grid; place-items:center; font-size:22px; flex:none}
+  .runBlock{width:100%; max-width:340px; margin:0 auto}
+  .runHead{margin:0 0 16px; font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:var(--muted2)}
+  .domainRow{display:flex; flex-direction:column; gap:0; width:100%; border-top:1px solid var(--line); border-bottom:1px solid var(--line)}
+  .dpill{display:flex; align-items:center; gap:14px; padding:12px 0; background:none; border:none}
+  .dpill + .dpill{border-top:1px solid var(--line)}
+  .dpill .ico{width:38px; height:38px; border-radius:50%; display:grid; place-items:center; font-size:21px; flex:none}
   .dpill .meta{display:flex; flex-direction:column; line-height:1.25}
   .dpill .nm{font-weight:700; font-size:15px}
   .dpill .dm{font-size:11px; color:var(--muted)}
@@ -142,10 +145,10 @@
   #transition .btn{max-width:360px; width:100%; margin:0}
 
   /* SUMMARY */
-  #summary{overflow-y:auto; align-items:center}
+  #summary{overflow-y:auto; align-items:stretch; padding:0}
   @keyframes sumImg{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:scale(1)}}
   @keyframes sumRise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
-  #summary.on #shareImg{animation:sumImg .5s cubic-bezier(.34,1.1,.5,1) both}
+  #summary.on .resultCard{animation:sumImg .5s cubic-bezier(.34,1.1,.5,1) both}
   #summary.on #sumActions>*{animation:sumRise .42s ease both}
   #summary.on #sumStats{animation-delay:.14s}
   #summary.on .shareRow{animation-delay:.24s}
@@ -160,6 +163,8 @@
   #summary.on #doneBtn{animation-delay:.40s}
   #sumStats{display:flex; justify-content:center; gap:20px; flex-wrap:wrap; margin-bottom:4px}
   .sChip{font-size:13px; color:var(--muted); letter-spacing:.04em}
+  .nextFade{text-align:center; color:var(--muted); font-size:13px; letter-spacing:.02em; margin:4px 0 0}
+  .nextFade b{color:var(--text); font-weight:700; font-variant-numeric:tabular-nums}
   .sChip b{font-variant-numeric:tabular-nums; font-weight:800}
   .sChip.day b{color:var(--crisp)} .sChip.spd b{color:#7e8ce8}
   #sumEyebrow{font-size:11px; letter-spacing:.2em; text-transform:uppercase; color:var(--muted); margin-bottom:10px}
@@ -172,8 +177,11 @@
   .bar .bfill{height:100%; width:0; border-radius:999px; transition:width .9s cubic-bezier(.2,.7,.2,1)}
   .bar .bval{width:30px; text-align:right; font-weight:800; font-size:15px; font-variant-numeric:tabular-nums}
   #shareImg{width:100%; max-width:none; border-radius:16px; display:block; margin:0 0 18px; border:1px solid var(--line)}
+  .resultCard{width:100%; max-width:none; border:1px solid var(--line2); border-top:none; border-left:none; border-right:none; border-radius:0 0 22px 22px; background:var(--bg); overflow:hidden; margin:0 0 10px}
+  .resultCard #shareImg{border:none; border-radius:0; margin:0}
+  .resultCard .shareRow{max-width:none; width:auto; margin:0; gap:12px; padding:18px 20px 24px}
   #summary .btn{max-width:330px; margin:0 auto}
-  #sumActions{width:100%; margin-top:auto; display:flex; flex-direction:column; gap:10px; align-items:center}
+  #sumActions{width:100%; margin-top:auto; display:flex; flex-direction:column; gap:8px; align-items:center; padding:0 24px max(18px,env(safe-area-inset-bottom))}
   #countdown{font-size:13px; color:var(--muted); letter-spacing:.05em; text-align:center; margin-top:6px}
   #countdown b{color:var(--crisp); font-variant-numeric:tabular-nums}
   .devReset{margin-top:14px; font-size:11px; color:var(--muted2); text-decoration:underline; cursor:pointer; background:none; border:none}
@@ -187,7 +195,7 @@
     #intro .mark{margin:10px 0 8px}
     .mark span{width:46px; height:58px; font-size:22px}
     .subtitle{font-size:13px; line-height:1.45}
-    .domainRow{gap:8px} .dpill{padding:10px 13px}
+    .domainRow{gap:0} .dpill{padding:10px 0}
     .btn{padding:13px 16px; font-size:15px} .btn-primary{font-size:15px}
     #shareImg{max-height:none; width:100%; max-width:none; margin:0 0 12px}
     #sumActions{gap:8px} #countdown{margin-top:2px} .devReset{margin-top:8px}
@@ -208,12 +216,15 @@
       <div class="mark"><span>F</span><span>A</span><span>D</span><span>E</span></div>
       <div class="subtitle">Everything fades.<br><b>How much can you hold?</b></div>
     </div>
-    <div class="domainRow" id="domainRow"></div>
+    <div class="runBlock">
+      <div class="runHead">Today’s games</div>
+      <div class="domainRow" id="domainRow"></div>
+    </div>
     <div class="introBottom">
+      <div class="footnote" id="introFoot"></div>
       <button class="btn btn-primary" id="startBtn">START TODAY’S FADE</button>
       <button class="btn btn-ghost" id="replayBtn" style="display:none">Play again</button>
-      <div class="footnote" id="introFoot"></div>
-      <div class="buildStamp">build 2026-06-05-1051</div>
+      <div class="buildStamp">build 2026-06-06-0219</div>
     </div>
   </section>
 
@@ -248,13 +259,16 @@
 
   <!-- SUMMARY -->
   <section id="summary" class="screen">
-    <img id="shareImg" alt="your FADE clarity card"/>
-    <div id="sumActions">
-      <div id="sumStats"></div>
+    <div class="resultCard">
+      <img id="shareImg" alt="your FADE clarity card"/>
       <div class="shareRow">
         <button class="btn btn-primary" id="shareBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>Share</button>
         <button class="btn" id="downloadCardBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Save</button>
       </div>
+    </div>
+    <div id="sumActions">
+      <div id="sumStats"></div>
+      <div id="nextFade" class="nextFade">Next FADE in <b id="cdClock">—</b></div>
       <div id="bonusSlot"></div>
       <button class="btn btn-ghost" id="doneBtn">Done</button>
       <button class="devReset" id="devReset">replay (dev)</button>
@@ -287,7 +301,7 @@
     --on-accent:#0b0a0d;
     --mono:'Plus Jakarta Sans',system-ui,sans-serif;
     --disp:'Plus Jakarta Sans',system-ui,sans-serif;
-    --logo:'Syne',system-ui,sans-serif;
+    --logo:'Syne',system-ui,sans-serif;   /* self-sufficient fallback; canonical = tokens.css (injected, overrides) */
   }
   body[data-theme="light"]{
     --bg:#efece4; --bg2:#ffffff; --card:#ffffff; --card2:#f3efe7;
@@ -320,7 +334,7 @@
   .screen.on{opacity:1;pointer-events:auto}
 
   /* wordmark */
-  .mark{font-family:var(--logo);font-weight:400;letter-spacing:0;display:flex;gap:4px}
+  .mark{font-family:var(--logo);font-weight:800;letter-spacing:0;display:flex;gap:4px}
   .mark span{display:inline-block}
 
   /* ---------------- INTRO ---------------- */
@@ -339,7 +353,7 @@
   #introCards{display:flex;gap:10px;margin-bottom:14px}
   .ic{width:62px;height:80px;border-radius:14px;background:var(--surface);
     border:1px solid var(--line);display:flex;align-items:center;justify-content:center;
-    font-family:var(--logo);font-weight:400;font-size:34px;
+    font-family:var(--disp);font-weight:800;font-size:34px;
     animation:introFade 4.4s ease-in-out infinite}
   .ic:nth-child(2){animation-delay:.5s}.ic:nth-child(3){animation-delay:1s}.ic:nth-child(4){animation-delay:1.5s}
   @keyframes introFade{0%,18%{opacity:1;filter:none;transform:translateY(0)}60%{opacity:.12;filter:grayscale(1) blur(2px)}72%{opacity:.12}90%,100%{opacity:1;filter:none}}
@@ -408,7 +422,7 @@
   .sheet{width:100%;max-width:340px;background:var(--bg2);border:1px solid var(--line2);border-radius:18px;
     padding:20px 20px 8px;box-shadow:0 30px 80px rgba(0,0,0,.5)}
   .sheetHead{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
-  .sheetHead span{font-family:var(--logo);font-size:22px}
+  .sheetHead span{font-family:var(--disp);font-weight:700;font-size:22px}
   #settingsClose{background:transparent;border:none;color:var(--crisp);font-family:var(--disp);font-weight:700;font-size:15px;cursor:pointer;padding:6px 4px}
   .setRow{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 0;border-top:1px solid var(--line)}
   .setLabel{font-size:15px;font-weight:600;color:var(--text)}
@@ -446,7 +460,7 @@
   #countdownOvl.on{pointer-events:auto}
   .cdMsg{font-family:var(--disp);font-size:15px;font-weight:600;color:var(--text);max-width:250px;text-align:center;line-height:1.55;opacity:.92}
   .cdMsg b{color:var(--crisp-soft);font-weight:700}
-  #cdNum{font-family:var(--logo);font-size:80px;line-height:1;color:var(--crisp);text-shadow:0 8px 44px var(--glow)}
+  #cdNum{font-family:var(--disp);font-weight:800;font-size:80px;line-height:1;color:var(--crisp);text-shadow:0 8px 44px var(--glow)}
   #cdNum.go{animation:cdPop .5s cubic-bezier(.2,1.4,.4,1)}
   @keyframes cdPop{0%{transform:scale(.4);opacity:0}45%{transform:scale(1.15);opacity:1}100%{transform:scale(1);opacity:1}}
 
@@ -474,7 +488,7 @@
   #introChallenge b{color:var(--crisp)}
 
   /* summary extras */
-  #rankBadge{font-family:var(--logo);font-size:34px;line-height:1;white-space:nowrap;margin:0 0 6px;text-align:center}
+  #rankBadge{font-family:var(--disp);font-weight:800;font-size:34px;line-height:1;white-space:nowrap;margin:0 0 6px;text-align:center}
   #rankSub{font-family:var(--disp);font-size:13px;color:var(--muted);letter-spacing:0;margin-bottom:18px;text-align:center}
   #challengeResult{font-family:var(--mono);font-size:13px;font-weight:700;margin-bottom:14px;text-align:center;min-height:0}
   #shareImg{width:100%;max-width:300px;border-radius:14px;border:1px solid var(--line);margin-bottom:18px;display:block;background:var(--bg2)}
@@ -483,6 +497,18 @@
   #countdown{font-family:var(--mono);font-size:11px;color:var(--muted2);letter-spacing:.12em;margin-top:18px;text-transform:uppercase;min-height:14px}
 </style>
 <style id="suite-freeze">html,body{overscroll-behavior:none}body{position:fixed;inset:0;width:100%;touch-action:manipulation}</style>
+<style id="fade-tokens">
+/* FADE shared design tokens — SINGLE SOURCE OF TRUTH.
+   build-suite.py injects this into every game, placed last in <head> so it is
+   authoritative. Edit fonts HERE, never per-game.
+   Syne is loaded ONLY at weights 700 & 800 — any rule using var(--logo) must set
+   one of those weights, or it renders a faux/fallback face. The build enforces this. */
+:root{
+  --disp:'Plus Jakarta Sans',system-ui,sans-serif;   /* body / UI / numerals */
+  --logo:'Syne',system-ui,sans-serif;                /* display / wordmark — load weights: 700, 800 only */
+  --mono:'Plus Jakarta Sans',system-ui,sans-serif;   /* HUD numerals: tabular Jakarta (NOT a monospace face) */
+}
+</style>
 </head>
 <body>
 <div id="app">
@@ -969,6 +995,7 @@ function endGame(){
   SFX.win();
   buildSummary();
   show('summary');
+  try{ parent.postMessage({type:'fade:done', score:(typeof G.clarity==='number'?G.clarity:undefined), hud:(G&&G.hud)||undefined}, '*'); }catch(e){}
 }
 
 /* ============== summary + share ============== */
@@ -985,7 +1012,7 @@ function buildSummary(){
   const normN = G.matchedLog.filter(m=>m.kind==='normal').length || 1;
   const recallRate = Math.min(1, G.recalls / normN);
   const comboRate  = Math.min(1, G.maxCombo / Math.max(6, normN));
-  G.clarity = Math.round(Math.max(0, Math.min(100, (G.done?55:30) + 30*recallRate + 15*comboRate)));
+  G.clarity = Math.round(Math.max(0, Math.min(100, 55 + 30*recallRate + 15*comboRate)));   // only runs on a genuine board-clear; 55 = baseline for clearing the fading board (design floor, not fabricated)
   $('#rankBadge').textContent = rank.name;
   $('#rankBadge').style.color = rank.color;
   $('#rankSub').textContent = rank.sub;
@@ -1195,7 +1222,7 @@ applyTheme(PROG.theme);
     --line:rgba(255,255,255,.08); --line2:rgba(255,255,255,.16);
     --text:#f4f1ea; --muted:#8d8896; --muted2:#807c8a;
     --crisp:#4fb0e4; --crisp-soft:#93cdf0; --glow:rgba(79,176,228,.3); --good:#5fd6a0; --bad:#ff5f6d;
-    --disp:'Plus Jakarta Sans',system-ui,sans-serif; --logo:'Syne',system-ui,sans-serif; --mono:'Plus Jakarta Sans',system-ui,sans-serif;
+    --disp:'Plus Jakarta Sans',system-ui,sans-serif; --logo:'Syne',system-ui,sans-serif; --mono:'Plus Jakarta Sans',system-ui,sans-serif;   /* self-sufficient fallback; canonical = tokens.css (injected, overrides) */
     --s:64px; --half:32px; --mini:46px;
   }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -1210,7 +1237,7 @@ applyTheme(PROG.theme);
   .stage{flex:1;min-height:0;width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden}
   .stageInner{width:100%;display:flex;flex-direction:column;align-items:center;transform-origin:center}
 
-  .rcount{font-family:var(--logo);font-size:13px;letter-spacing:.16em;color:var(--muted);font-variant-numeric:tabular-nums;margin-top:2px}
+  .rcount{font-family:var(--disp);font-weight:700;font-size:13px;letter-spacing:.16em;color:var(--muted);font-variant-numeric:tabular-nums;margin-top:2px}
   .prompt{font-size:18px;color:var(--text);margin:14px 0 4px;text-align:center;font-weight:600}
   .hint{font-size:13px;color:var(--muted2);margin-bottom:12px;text-align:center;letter-spacing:.01em}
 
@@ -1277,7 +1304,7 @@ applyTheme(PROG.theme);
 
   .result{margin-top:12px;text-align:center;min-height:42px;opacity:0;transition:opacity .4s}
   .result.show{opacity:1}
-  .result .big{font-family:var(--logo);font-size:22px;margin-bottom:4px}
+  .result .big{font-family:var(--disp);font-weight:800;font-size:22px;margin-bottom:4px}
   .result .big.win{color:var(--good)} .result .big.lose{color:var(--bad)}
   .result .exp{font-size:13px;color:var(--muted);line-height:1.4;max-width:330px;margin:0 auto}
 
@@ -1291,6 +1318,18 @@ applyTheme(PROG.theme);
   @media (max-height:680px){ .netbox{height:200px} .prompt{font-size:15px;margin:8px 0 2px} .hint{margin-bottom:8px} :root{--mini:40px} .cand .miniscene{height:66px} }
 </style>
 <style id="suite-freeze">html,body{overscroll-behavior:none}body{position:fixed;inset:0;width:100%;touch-action:manipulation}</style>
+<style id="fade-tokens">
+/* FADE shared design tokens — SINGLE SOURCE OF TRUTH.
+   build-suite.py injects this into every game, placed last in <head> so it is
+   authoritative. Edit fonts HERE, never per-game.
+   Syne is loaded ONLY at weights 700 & 800 — any rule using var(--logo) must set
+   one of those weights, or it renders a faux/fallback face. The build enforces this. */
+:root{
+  --disp:'Plus Jakarta Sans',system-ui,sans-serif;   /* body / UI / numerals */
+  --logo:'Syne',system-ui,sans-serif;                /* display / wordmark — load weights: 700, 800 only */
+  --mono:'Plus Jakarta Sans',system-ui,sans-serif;   /* HUD numerals: tabular Jakarta (NOT a monospace face) */
+}
+</style>
 </head>
 <body>
 <div class="wrap">
@@ -1507,7 +1546,7 @@ function burstGlow(){ const g=$('#winGlow'); if(g){ g.classList.remove('go'); vo
 function advanceAfter(ms){
   setTimeout(()=>{
     if(G.i < G.n-1){ G.i++; generate(); }
-    else { G.score=clamp(Math.round(G.roundScores.reduce((a,b)=>a+b,0)),0,100); G.done=true; }
+    else { G.score=clamp(Math.round(G.roundScores.reduce((a,b)=>a+b,0)),0,100); G.done=true; try{ parent.postMessage({type:'fade:done', score:G.score, hud:(G&&G.hud)||undefined}, '*'); }catch(e){} }
   }, ms);
 }
 
@@ -1540,7 +1579,7 @@ generate();
     --line:rgba(255,255,255,.08); --line2:rgba(255,255,255,.16);
     --text:#f4f1ea; --muted:#8d8896; --muted2:#807c8a;
     --crisp:#7e8ce8; --crisp-soft:#aab3f1; --glow:rgba(126,140,232,.3); --good:#5fd6a0; --bad:#ff5f6d;
-    --disp:'Plus Jakarta Sans',system-ui,sans-serif; --logo:'Syne',system-ui,sans-serif; --mono:'Plus Jakarta Sans',system-ui,sans-serif;
+    --disp:'Plus Jakarta Sans',system-ui,sans-serif; --logo:'Syne',system-ui,sans-serif; --mono:'Plus Jakarta Sans',system-ui,sans-serif;   /* self-sufficient fallback; canonical = tokens.css (injected, overrides) */
   }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;-webkit-user-select:none;user-select:none}
   html,body{margin:0;height:100%}
@@ -1556,7 +1595,7 @@ generate();
     box-shadow:inset 0 0 0 2px var(--fx,transparent), inset 0 0 64px -10px var(--fx,transparent)}
   .screen{position:absolute;inset:0;display:flex;flex-direction:column;opacity:0;pointer-events:none;transition:opacity .35s}
   .screen.on{opacity:1;pointer-events:auto}
-  .mark{font-family:var(--logo);font-size:28px;display:flex;gap:2px;justify-content:center}
+  .mark{font-family:var(--logo);font-weight:800;font-size:28px;display:flex;gap:2px;justify-content:center}
   .mark span:nth-child(2){opacity:.74}.mark span:nth-child(3){opacity:.54}.mark span:nth-child(4){opacity:.36}.mark span:nth-child(5){opacity:.22}
 
   /* INTRO */
@@ -1582,7 +1621,7 @@ generate();
   .rulebar{margin:6px 18px 0;padding:12px 14px;border-radius:14px;background:linear-gradient(180deg,rgba(126,140,232,.14),rgba(126,140,232,.04));
     border:1px solid rgba(126,140,232,.25);text-align:center}
   .rulebar .lab{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--crisp);opacity:.85}
-  .rulebar .rule{font-family:var(--logo);font-size:22px;margin-top:3px;display:flex;align-items:center;justify-content:center;gap:9px}
+  .rulebar .rule{font-family:var(--disp);font-weight:700;font-size:22px;margin-top:3px;display:flex;align-items:center;justify-content:center;gap:9px}
   .rulebar .rule .tgt{font-size:28px}
   .rulebar .rule .dim{color:var(--crisp)}
   .rulebar.flash{animation:ruleflash .7s}
@@ -1606,7 +1645,7 @@ generate();
   @keyframes cardin{from{transform:scale(.7) translateY(14px);opacity:0}to{transform:scale(1);opacity:1}}
   .swipecard.go-right{transition:transform .22s,opacity .22s;transform:translateX(420px) rotate(22deg);opacity:0}
   .swipecard.go-left{transition:transform .22s,opacity .22s;transform:translateX(-420px) rotate(-22deg);opacity:0}
-  .verdict{position:absolute;top:18px;font-family:var(--logo);font-size:28px;opacity:0;z-index:5}
+  .verdict{position:absolute;top:18px;font-family:var(--disp);font-weight:800;font-size:28px;opacity:0;z-index:5}
   .verdict.good{color:var(--good)} .verdict.bad{color:var(--bad)}
   .verdict.show{animation:vpop .5s}
   @keyframes vpop{0%{opacity:0;transform:scale(.5)}30%{opacity:1;transform:scale(1.1)}100%{opacity:0;transform:scale(1) translateY(-18px)}}
@@ -1621,7 +1660,7 @@ generate();
   #summary{padding:30px 26px;align-items:center;justify-content:center;overflow-y:auto;text-align:center}
   #summary .mark{font-size:22px;margin-bottom:2px}
   #sumTitle{font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:18px}
-  #bigStreak{font-family:var(--logo);font-size:64px;line-height:1;color:var(--crisp)}
+  #bigStreak{font-family:var(--disp);font-weight:800;font-size:64px;line-height:1;color:var(--crisp)}
   #bigLab{font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);margin:4px 0 22px}
   .sumStats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;width:100%;max-width:300px;margin-bottom:20px}
   .ss{background:var(--bg2);border:1px solid var(--line);border-radius:13px;padding:13px 15px}
@@ -1632,6 +1671,18 @@ generate();
   #againBtn{width:100%;max-width:300px;background:transparent;border:1px solid var(--line);color:var(--muted);font-size:15px;padding:13px;border-radius:12px;margin-top:10px;font-weight:700}
 </style>
 <style id="suite-freeze">html,body{overscroll-behavior:none}body{position:fixed;inset:0;width:100%;touch-action:manipulation}</style>
+<style id="fade-tokens">
+/* FADE shared design tokens — SINGLE SOURCE OF TRUTH.
+   build-suite.py injects this into every game, placed last in <head> so it is
+   authoritative. Edit fonts HERE, never per-game.
+   Syne is loaded ONLY at weights 700 & 800 — any rule using var(--logo) must set
+   one of those weights, or it renders a faux/fallback face. The build enforces this. */
+:root{
+  --disp:'Plus Jakarta Sans',system-ui,sans-serif;   /* body / UI / numerals */
+  --logo:'Syne',system-ui,sans-serif;                /* display / wordmark — load weights: 700, 800 only */
+  --mono:'Plus Jakarta Sans',system-ui,sans-serif;   /* HUD numerals: tabular Jakarta (NOT a monospace face) */
+}
+</style>
 </head>
 <body>
 <div id="app">
@@ -1814,6 +1865,7 @@ function win(){ finish(true, null); }
 function finish(survived, card){
   if(G.done) return;
   G.done=true; G.score=scoreFor(G.streak); G.cardEl=null;
+  try{ parent.postMessage({type:'fade:done', score:G.score, streak:G.streak, hud:(G&&G.hud)||undefined}, '*'); }catch(e){}
   $('#sumTitle').textContent = survived ? 'cleared the deck' : 'survival';
   $('#bigStreak').textContent=G.streak;
   $('#bigLab').textContent='card streak';
@@ -1866,7 +1918,7 @@ document.addEventListener('keydown',e=>{ if(!G||!G.cardEl)return;
     --crisp:#a87fd4; --crisp-soft:#cbb3e8; --glow:rgba(168,127,212,.32);
     --good:#5fd6a0; --bad:#ff5f6d;
     --surface:rgba(255,255,255,.03); --surface2:rgba(255,255,255,.10); --on-accent:#0b0a0d;
-    --disp:'Plus Jakarta Sans',system-ui,sans-serif; --logo:'Syne',system-ui,sans-serif; --mono:'Plus Jakarta Sans',system-ui,sans-serif;
+    --disp:'Plus Jakarta Sans',system-ui,sans-serif; --logo:'Syne',system-ui,sans-serif; --mono:'Plus Jakarta Sans',system-ui,sans-serif;   /* self-sufficient fallback; canonical = tokens.css (injected, overrides) */
   }
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
   html,body{margin:0;padding:0}
@@ -1876,7 +1928,7 @@ document.addEventListener('keydown',e=>{ if(!G||!G.cardEl)return;
   .screen{position:absolute; inset:0; display:none; flex-direction:column; padding:26px 24px 30px}
   .screen.on{display:flex}
   .mark{display:flex; gap:8px; justify-content:center}
-  .mark span{font-family:var(--logo); width:48px; height:62px; display:grid; place-items:center; background:var(--card);
+  .mark span{font-family:var(--logo); font-weight:800; width:48px; height:62px; display:grid; place-items:center; background:var(--card);
     border:1px solid var(--line); border-radius:12px; font-size:28px}
   .btn{appearance:none; border:1px solid var(--line2); background:var(--surface); color:var(--text); font-family:var(--disp);
     font-weight:700; font-size:15px; padding:15px; border-radius:13px; width:100%; cursor:pointer; transition:transform .08s,filter .15s}
@@ -1938,7 +1990,7 @@ document.addEventListener('keydown',e=>{ if(!G||!G.cardEl)return;
   /* summary */
   #summary{justify-content:center; align-items:center; text-align:center; gap:0}
   #sEye{font-size:11px; letter-spacing:.2em; text-transform:uppercase; color:var(--muted); margin-bottom:12px}
-  #sRank{font-family:var(--logo); font-size:42px; color:var(--crisp); margin-bottom:6px}
+  #sRank{font-family:var(--disp); font-weight:800; font-size:42px; color:var(--crisp); margin-bottom:6px}
   #sSub{font-size:15px; color:var(--muted); margin-bottom:26px}
   .sStats{display:flex; gap:12px; margin-bottom:28px}
   .ss{background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:16px 22px; min-width:120px}
@@ -1947,6 +1999,18 @@ document.addEventListener('keydown',e=>{ if(!G||!G.cardEl)return;
   #summary .btn{max-width:300px}
 </style>
 <style id="suite-freeze">html,body{overscroll-behavior:none}body{position:fixed;inset:0;width:100%;touch-action:manipulation}</style>
+<style id="fade-tokens">
+/* FADE shared design tokens — SINGLE SOURCE OF TRUTH.
+   build-suite.py injects this into every game, placed last in <head> so it is
+   authoritative. Edit fonts HERE, never per-game.
+   Syne is loaded ONLY at weights 700 & 800 — any rule using var(--logo) must set
+   one of those weights, or it renders a faux/fallback face. The build enforces this. */
+:root{
+  --disp:'Plus Jakarta Sans',system-ui,sans-serif;   /* body / UI / numerals */
+  --logo:'Syne',system-ui,sans-serif;                /* display / wordmark — load weights: 700, 800 only */
+  --mono:'Plus Jakarta Sans',system-ui,sans-serif;   /* HUD numerals: tabular Jakarta (NOT a monospace face) */
+}
+</style>
 </head>
 <body>
 <div id="app">
@@ -2143,6 +2207,7 @@ function finish(){
   if(G.done) return;
   G.done=true; cancelAnimationFrame(G.raf);
   G.score=clamp(Math.round(G.roundScores.reduce((a,b)=>a+b,0)),0,100);
+  try{ parent.postMessage({type:'fade:done', score:G.score, hud:(G&&G.hud)||undefined}, '*'); }catch(e){}
   const rank = G.score>=90?'SHARP': G.score>=70?'QUICK': G.score>=45?'STEADY':'FOGGY';
   const sub = G.score>=90?'solved cold': G.score>=70?'kept up with the fade': G.score>=45?'got most of them':'the fade won a few';
   $('#sRank').textContent=rank; $('#sSub').textContent=sub;
@@ -2201,7 +2266,7 @@ const FA=(function(){
   if(last){ returning=true; const d=Math.floor((Date.now()-(+last))/86400000); daysSince=isNaN(d)?null:d; }
   try{ localStorage.setItem('fade_last_seen', String(Date.now())); }catch(e){}
   const buildMeta=document.querySelector('meta[name=fade-build]');
-  const SUPER={ uid, build:buildMeta?buildMeta.content:'2026-06-05-1051', mode:'full' };
+  const SUPER={ uid, build:buildMeta?buildMeta.content:'2026-06-06-0219', mode:'full' };
   function track(event, props){
     const payload=Object.assign({day:(typeof DN!=='undefined'?DN:null)}, SUPER, props||{});
     try{ if(self.posthog && posthog.capture){ posthog.capture(event, payload); } }catch(e){}
@@ -2271,7 +2336,7 @@ function renderIntro(){
   const btn=$('#startBtn'), foot=$('#introFoot'), rb=$('#replayBtn');
   if(S.done){ const ds=dayStreak(); btn.innerHTML='See today’s result <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>'; rb.style.display=''; foot.innerHTML=`FADE <b>#${S.dn}</b> complete${ds>0?` · 🔥 <b>day ${ds}</b>`:''} · back tomorrow`; }
   else if(S.idx>0){ rb.style.display='none'; btn.textContent=`Resume · Game ${S.idx+1} of ${CORE_N}`; foot.innerHTML=`FADE <b>#${S.dn}</b> · ${S.idx} of ${CORE_N} done`; }
-  else { rb.style.display='none'; btn.textContent='START TODAY’S FADE'; foot.innerHTML=`FADE <b>#${S.dn}</b> · one run per day`; }
+  else { rb.style.display='none'; btn.textContent='START TODAY’S FADE'; foot.innerHTML=`FADE <b>#${S.dn}</b> · once a day`; }
   show('intro');
 }
 
@@ -2341,33 +2406,48 @@ function startDonePoll(d){
     }catch(e){}
   },300);
 }
+
+/* Primary leg resolver: trust the game's own 'fade:done' postMessage (carries its
+   authoritative score). The 300ms poll above stays as a fallback, so a missed or
+   malformed message can never strand a leg — and a renamed internal global can't
+   silently corrupt the score, because the number travels in the message. */
+window.addEventListener('message', (e)=>{
+  if(!curIframe || e.source!==curIframe.contentWindow) return;   // only the live game frame
+  const m=e.data; if(!m || m.type!=='fade:done') return;
+  if(typeof m.hud==='string') $('#legHud').innerHTML=m.hud;
+  if(legResolved) return;
+  if(legIsBonus){ clearInterval(donePoll); donePoll=null; setTimeout(()=>finishBonus(DOMAINS[3]),500); return; }
+  const d=DOMAINS[S.idx];
+  const sc = (typeof m.score==='number' && isFinite(m.score)) ? clamp(Math.round(m.score),0,100) : readScore(d);
+  if(sc==null) return;   // score not resolvable yet — leave the poll running as fallback
+  clearInterval(donePoll); donePoll=null;
+  setTimeout(()=>finishLeg(sc),500);
+});
+
 function fb_label(t){ $('#finishBtn').textContent=t; }
 
 function readScore(d){
   const cw = curIframe && curIframe.contentWindow;
   try{
     if(d.key==='memory'){
-      const done=cw.eval('!!(typeof G!=="undefined"&&G&&G.done)');
       const c=cw.eval('(typeof G!=="undefined"&&G&&typeof G.clarity==="number")?Math.round(G.clarity):-1');
-      if(done&&c>=0) return clamp(c,0,100);
-      if(c>=0) return clamp(c,0,100);
-      return null;
+      return c>=0 ? clamp(c,0,100) : null;   // clarity exists only after a genuine board-clear; else honest 0
     }
     if(d.key==='speed'){
-      if(cw.eval('typeof G!=="undefined"&&G&&typeof G.score==="number"?1:0')) return clamp(cw.eval('Math.round(G.score)'),0,100);
-      return 72;
+      if(cw.eval('!!(typeof G!=="undefined"&&G&&G.done&&typeof G.score==="number")')) return clamp(cw.eval('Math.round(G.score)'),0,100);
+      if(cw.eval('typeof scoreFor==="function"&&typeof G!=="undefined"&&G&&typeof G.streak==="number"?1:0')) return clamp(cw.eval('Math.round(scoreFor(G.streak))'),0,100);
+      return null;   // real streak-based score, else honest 0 (was fabricated 72)
     }
     if(d.key==='logic'){
-      const done=cw.eval('!!(typeof G!=="undefined"&&G&&G.done)');
-      if(done) return clamp(cw.eval('Math.round(G.score)'),0,100);
-      if(cw.eval('typeof G!=="undefined"&&!!G')) return clamp(cw.eval('Math.round(G.correct/G.rounds.length*100)'),0,100);
-      return 70;
+      if(cw.eval('!!(typeof G!=="undefined"&&G&&G.done)')) return clamp(cw.eval('Math.round(G.score)'),0,100);
+      if(cw.eval('typeof G!=="undefined"&&G&&Array.isArray(G.roundScores)?1:0')) return clamp(cw.eval('Math.round(G.roundScores.reduce(function(a,b){return a+b;},0))'),0,100);
+      return null;   // real partial (sum of solved rounds), else honest 0 (was fabricated 70)
     }
   }catch(e){}
   if(d.key==='spatial'){
     try{ if(cw.eval('typeof G!=="undefined"&&G&&G.done&&typeof G.score==="number"?1:0')) return clamp(cw.eval('Math.round(G.score)'),0,100); }catch(e){}
-    try{ if(cw.eval('typeof G!=="undefined"&&G&&G.n?1:0')) return clamp(cw.eval('Math.round(40 + (G.correct/G.n)*60)'),0,100); }catch(e){}
-    return null;   // no real score yet — caller treats as "leg not finished" (no fabricated score)
+    try{ if(cw.eval('typeof G!=="undefined"&&G&&Array.isArray(G.roundScores)?1:0')) return clamp(cw.eval('Math.round(G.roundScores.reduce(function(a,b){return a+b;},0))'),0,100); }catch(e){}
+    return null;   // real partial only (sum of answered cubes); no fabricated floor (was 40 + ratio*60)
   }
   return null;
 }
@@ -2454,7 +2534,13 @@ function showSummary(){
   if(S.bonus && S.bonus.streak>0) chips+=`<span class="sChip spd">⚡ Speed best <b>${S.bonus.streak}</b></span>`;
   $('#sumStats').innerHTML=chips;
   renderBonusSlot();
+  startCountdown();
   show('summary'); renderShareImage(brain); SFX.reveal();
+}
+function startCountdown(){
+  clearInterval(cdTimer);
+  const tick=()=>{ const el=$('#cdClock'); if(el) el.textContent=fmtHMS(msToLocalMidnight()); };
+  tick(); cdTimer=setInterval(tick,1000);
 }
 function renderBonusSlot(){
   const slot=$('#bonusSlot'); slot.innerHTML='';
@@ -2468,7 +2554,7 @@ function renderBonusSlot(){
     slot.appendChild(b);
   }
 }
-$('#doneBtn').onclick=()=>renderIntro();
+$('#doneBtn').onclick=()=>{ clearInterval(cdTimer); renderIntro(); };
 $('#devReset').onclick=()=>{ try{localStorage.removeItem(KEY);}catch(e){} S={dn:DN,idx:0,results:[],done:false,bonus:null}; renderIntro(); };
 
 function barcodeRows(){
@@ -2532,7 +2618,7 @@ async function renderShareImage(brain){
     }
   }catch(e){}
   await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));   // let the frame settle
-  const W=660,H=820, cv=document.createElement('canvas'); cv.width=W; cv.height=H; const x=cv.getContext('2d'); shareCanvas=cv;
+  const W=660,H=620, cv=document.createElement('canvas'); cv.width=W; cv.height=H; const x=cv.getContext('2d'); shareCanvas=cv;
   x.fillStyle='#0b0a0d'; x.fillRect(0,0,W,H);
   const g=x.createRadialGradient(W*0.8,-40,40,W*0.8,-40,520); g.addColorStop(0,'rgba(79,176,228,0.13)'); g.addColorStop(1,'rgba(79,176,228,0)');
   x.fillStyle=g; x.fillRect(0,0,W,H);
@@ -2541,7 +2627,7 @@ async function renderShareImage(brain){
   x.fillStyle=aur; x.fillRect(0,0,W,6);
   const PAD=56;
   x.textBaseline='middle';
-  const headC=104;
+  const headC=94;
   x.fillStyle='#f4f1ea'; x.font="800 64px Syne, sans-serif"; x.textAlign='left'; x.fillText('FADE',PAD,headC);
   x.textAlign='right';
   const cardDs=S.dayStreak||dayStreak();
@@ -2552,41 +2638,42 @@ async function renderShareImage(brain){
     x.fillStyle='#8d8896'; x.font="600 26px 'Plus Jakarta Sans', sans-serif"; x.fillText(`#${S.dn}`,W-PAD,headC);
   }
   x.textBaseline='alphabetic';
-  x.textAlign='left'; x.fillStyle='#807c8a'; x.font="700 20px 'Plus Jakarta Sans', sans-serif"; x.fillText('TODAY’S CLARITY',PAD,210);
-  x.fillStyle='#f4f1ea'; x.font="800 110px 'Plus Jakarta Sans', sans-serif"; x.fillText(String(brain),PAD-2,318);
+  // hero: clarity number + tier are the single focal point a stranger lands on
+  x.textAlign='left'; x.fillStyle='#807c8a'; x.font="700 19px 'Plus Jakarta Sans', sans-serif"; x.fillText('TODAY’S CLARITY',PAD,168);
+  x.fillStyle='#f4f1ea'; x.font="800 122px 'Plus Jakarta Sans', sans-serif"; x.fillText(String(brain),PAD-3,292);
   const numW=x.measureText(String(brain)).width;
-  x.fillStyle=aur; x.font="800 30px 'Plus Jakarta Sans', sans-serif"; x.textAlign='left'; x.fillText(clarityTier(brain), PAD-2+numW+20, 318);
-  let by=392; const barW=W-PAD*2-190, barX=PAD+158, barH=26;
+  x.fillStyle=aur; x.font="800 36px 'Plus Jakarta Sans', sans-serif"; x.fillText(clarityTier(brain), PAD-3+numW+22, 292);
+  // barcode: filled = what you held, smudge = what faded — the card now *shows* the decay
+  let by=352; const sq=28, gap=13, barX=PAD+162;
   DOMAINS.slice(0,CORE_N).forEach((d,i)=>{
     const sc=(S.results[i]&&S.results[i].score)||0;
-    x.fillStyle='#cfc9c0'; x.font="700 23px 'Plus Jakarta Sans', sans-serif"; x.textAlign='left'; x.fillText(`${d.icon} ${d.name}`,PAD,by+barH-5);
-    const filled=Math.max(0,Math.min(5,Math.round(sc/20))), sq=barH, gap=12;
-    for(let k=0;k<5;k++){ roundRect(x, barX+k*(sq+gap), by, sq, sq, 7); x.fillStyle = k<filled ? d.hex : 'rgba(255,255,255,0.10)'; x.fill(); }
-    x.fillStyle=d.hex; x.font="800 26px 'Plus Jakarta Sans', sans-serif"; x.textAlign='right'; x.fillText(String(sc),W-PAD,by+barH-3);
-    by+=barH+34;
+    x.fillStyle='#cfc9c0'; x.font="700 23px 'Plus Jakarta Sans', sans-serif"; x.textAlign='left'; x.fillText(`${d.icon} ${d.name}`,PAD,by+sq-6);
+    const filled=Math.max(0,Math.min(5,Math.round(sc/20)));
+    for(let k=0;k<5;k++){ const cx=barX+k*(sq+gap), cy=by;
+      if(k<filled){ roundRect(x,cx,cy,sq,sq,7); x.fillStyle=d.hex; x.fill(); }
+      else { roundRect(x,cx,cy,sq,sq,7); x.fillStyle='rgba(255,255,255,0.03)'; x.fill(); smudge(x, cx+sq/2, cy+sq/2, sq*0.5, d.hex); }
+      roundRect(x,cx,cy,sq,sq,7); x.strokeStyle='rgba(255,255,255,0.14)'; x.lineWidth=1.5; x.stroke();   // subtle frame on every cell — faded slots read as intentional
+    }
+    x.fillStyle=d.hex; x.font="800 27px 'Plus Jakarta Sans', sans-serif"; x.textAlign='right'; x.fillText(String(sc),W-PAD,by+sq-4);
+    by+=sq+34;
   });
-  // FOMO countdown in a crisp panel, kept clear of the social-crop zone at the bottom
-  const pY=by+22, pH=92, pX=PAD, pW=W-PAD*2;
-  roundRect(x,pX,pY,pW,pH,18); x.fillStyle='rgba(255,255,255,0.05)'; x.fill();
-  roundRect(x,pX,pY,pW,pH,18); x.strokeStyle='rgba(255,255,255,0.10)'; x.lineWidth=1; x.stroke();
-  const cY=pY+pH/2;
-  x.textBaseline='middle';
-  x.fillStyle='#8d8896'; x.font="700 17px 'Plus Jakarta Sans', sans-serif"; x.textAlign='left'; x.fillText('NEXT FADE IN', pX+26, cY);
-  x.fillStyle=aur; x.font="800 42px 'Plus Jakarta Sans', sans-serif"; x.textAlign='right'; x.fillText(fmtHMS(msToLocalMidnight()), pX+pW-26, cY);
-  x.textBaseline='alphabetic';
-  // card footer — the domain drives traffic on screenshots (many shares are images, which strip text/links)
+  // footer — the domain drives traffic on screenshots (images strip links). No countdown baked in: a frozen timer is meaningless to a recipient, so it lives on-screen instead.
   x.textAlign='center';
   x.fillStyle='#f4f1ea'; x.font="800 32px Syne, sans-serif"; try{ x.letterSpacing='1px'; }catch(e){}
-  x.fillText('fadeagain.com', W/2, pY+pH+62);
+  x.fillText('fadeagain.com', W/2, 556);
   try{ x.letterSpacing='0px'; }catch(e){}
   $('#shareImg').src=cv.toDataURL('image/png');
 }
+function smudge(x,cx,cy,r,hex){ const n=parseInt(hex.slice(1),16),R=(n>>16)&255,G=(n>>8)&255,B=n&255;
+  const g=x.createRadialGradient(cx,cy,0,cx,cy,r);
+  g.addColorStop(0,`rgba(${R},${G},${B},0.20)`); g.addColorStop(0.55,`rgba(${R},${G},${B},0.06)`); g.addColorStop(1,`rgba(${R},${G},${B},0)`);
+  x.fillStyle=g; x.beginPath(); x.arc(cx,cy,r,0,Math.PI*2); x.fill(); }
 function roundRect(x,X,Y,w,h,rad){ rad=Math.min(rad,h/2,w/2); x.beginPath(); x.moveTo(X+rad,Y); x.arcTo(X+w,Y,X+w,Y+h,rad); x.arcTo(X+w,Y+h,X,Y+h,rad); x.arcTo(X,Y+h,X,Y,rad); x.arcTo(X,Y,X+w,Y,rad); x.closePath(); }
 function shade(hex,amt){ const n=parseInt(hex.slice(1),16); let r=clamp((n>>16)+amt,0,255),g=clamp(((n>>8)&255)+amt,0,255),b=clamp((n&255)+amt,0,255); return '#'+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1); }
 function glowOf(hex){ const n=parseInt(hex.slice(1),16); return `rgba(${(n>>16)&255},${(n>>8)&255},${n&255},.32)`; }
 
 /* ---------------- boot ---------------- */
-console.log('FADE · build 2026-06-05-1051');
+console.log('FADE · build 2026-06-06-0219');
 $('#startBtn').onclick=()=>{
   ac();
   if(S.done){ FA.track('result_reopened'); showSummary(); return; }
